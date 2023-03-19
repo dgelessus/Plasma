@@ -52,10 +52,8 @@ void plClientMsg::IReset()
 
 void plClientMsg::AddRoomLoc(const plLocation& loc)
 {
-    if (loc.IsValid())
-        fRoomLocs.emplace_back(loc);
-    else
-        hsStatusMessage("Trying to load an invalid room, ignoring");
+    hsAssert(loc.IsValid(), "Trying to load an invalid room");
+    fRoomLocs.emplace_back(loc);
 }
 
 void plClientMsg::Read(hsStream* stream, hsResMgr* mgr)
