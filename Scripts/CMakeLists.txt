@@ -16,6 +16,11 @@ install(
     FILES_MATCHING PATTERN "*.py"
 )
 install(
+    DIRECTORY "NAGUS/src/"
+    DESTINATION client/python
+    FILES_MATCHING PATTERN "*.py"
+)
+install(
     DIRECTORY "SDL/"
     DESTINATION client/SDL
     FILES_MATCHING PATTERN "*.sdl"

@@ -4,6 +4,10 @@
 	branch = release-1.11.0
 	shallow = true
 
+[submodule "Scripts/NAGUS"]
+	path = Scripts/NAGUS
+	url = https://github.com/dgelessus/NAGUS.git
+
 [submodule "vcpkg"]
 	path = vcpkg
 	url = https://github.com/microsoft/vcpkg.git
