@@ -65,7 +65,7 @@ const unsigned kMaxImmediateDisconnects             = 5;
 const unsigned kMaxFailedConnects                   = 5;
 const unsigned kPingIntervalMs                      = 30 * 1000;
 const unsigned kPingTimeoutMs                       = kPingIntervalMs * 10;
-const unsigned kDisconnectedTimeoutMs               = kPingIntervalMs;
+const unsigned kDisconnectedTimeoutMs               = 6 * 1000;
 
 
 /*****************************************************************************

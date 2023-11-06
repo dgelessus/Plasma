@@ -1195,7 +1195,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nC
         return PARABLE_NORMAL_EXIT;
     }
 
-    NetCliAuthAutoReconnectEnable(false);
+    NetCliAuthAutoReconnectEnable(true);
     InitNetClientComm();
 
     NetClientStartRepeatedCallback([]() {
