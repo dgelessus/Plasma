@@ -11,6 +11,11 @@ add_custom_target(Scripts
 )
 
 install(
+    DIRECTORY "Config/"
+    DESTINATION client
+    FILES_MATCHING PATTERN "*.ini"
+)
+install(
     DIRECTORY "Python/"
     DESTINATION client/python
     FILES_MATCHING PATTERN "*.py"
