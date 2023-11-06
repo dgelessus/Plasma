@@ -1,5 +1,6 @@
 import asyncio
 import logging.config
+import os
 import threading
 import typing
 
@@ -52,6 +53,11 @@ def start_nagus():
         global server_task
 
         try:
+            try:
+                os.mkdir("sav")
+            except FileExistsError:
+                pass
+
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
 
