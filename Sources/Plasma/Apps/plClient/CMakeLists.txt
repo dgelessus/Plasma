@@ -264,6 +264,11 @@ if(APPLE)
     )
 endif()
 
+install(
+    FILES ${plClient_TEXT}
+    DESTINATION client
+)
+
 if(PLASMA_BUILD_RESOURCE_DAT)
     source_group("Client Resource Scripts" FILES ${external_SCRIPTS})
     source_group("Client Resource Images" FILES ${external_SOURCES})
