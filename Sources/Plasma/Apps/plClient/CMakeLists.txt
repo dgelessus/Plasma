@@ -244,7 +244,9 @@ target_link_libraries(
 target_include_directories(plClient PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
 
 if(PLASMA_EXTERNAL_RELEASE)
-    set_target_properties(plClient PROPERTIES OUTPUT_NAME "UruExplorer")
+    set_target_properties(plClient PROPERTIES OUTPUT_NAME "UruExplorerOffline")
+else()
+    set_target_properties(plClient PROPERTIES OUTPUT_NAME "plClientOffline")
 endif(PLASMA_EXTERNAL_RELEASE)
 
 if(APPLE)
