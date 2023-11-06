@@ -45,7 +45,6 @@ install(
     # security concerns. NOTE: When adding a new PATTERN, be sure to "quote" the directory or file
     # name, otherwise you will break the install command in a silent, yet disastrous way.
     PATTERN "__pycache__" EXCLUDE
-    PATTERN "asyncio" EXCLUDE
     PATTERN "ctypes" EXCLUDE
     PATTERN "curses" EXCLUDE
     PATTERN "distutils" EXCLUDE
@@ -71,6 +70,28 @@ install(
     PATTERN "antigravity.py" EXCLUDE
     PATTERN "asynchat.py" EXCLUDE
     PATTERN "asyncore.py" EXCLUDE
-    PATTERN "socket.py" EXCLUDE
-    PATTERN "socketserver.py" EXCLUDE
+)
+install(
+    DIRECTORY "${Scripts_SYSTEM_PATH}/../DLLs/"
+    DESTINATION client/python/system/lib-dynload
+
+    FILES_MATCHING
+    PATTERN "_asyncio.pyd"
+    PATTERN "_overlapped.pyd"
+    PATTERN "_socket.pyd"
+    PATTERN "_sqlite3.pyd"
+    PATTERN "_uuid.pyd"
+    PATTERN "select.pyd"
+)
+install(
+    DIRECTORY "${Scripts_SYSTEM_PATH}/../../../debug/bin/"
+    DESTINATION client/python/system/lib-dynload
+
+    FILES_MATCHING
+    PATTERN "_asyncio_d.pyd"
+    PATTERN "_overlapped_d.pyd"
+    PATTERN "_socket_d.pyd"
+    PATTERN "_sqlite3_d.pyd"
+    PATTERN "_uuid_d.pyd"
+    PATTERN "select_d.pyd"
 )
