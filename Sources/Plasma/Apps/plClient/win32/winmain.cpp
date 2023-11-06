@@ -1217,6 +1217,12 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nC
     bool cancelled = AuthenticateNetClientComm(&auth, nullptr);
     needExit = IS_NET_ERROR(auth) || cancelled;
 
+    if (IS_NET_ERROR(auth) && !cancelled) {
+        LoginDialogParam loginParam {};
+        loginParam.authError = auth;
+        DialogBoxParam(gHInst, MAKEINTRESOURCE(IDD_AUTHFAILED), nullptr, AuthFailedDialogProc, (LPARAM)&loginParam);
+    }
+
     if (doIntroDialogs && !needExit) {
         HINSTANCE hRichEdDll = LoadLibrary("RICHED20.DLL");
         INT_PTR val = ::DialogBoxParam( hInst, MAKEINTRESOURCE( IDD_URULOGIN_EULA ), nullptr, UruTOSDialogProc, (LPARAM)hInst);
