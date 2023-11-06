@@ -1082,6 +1082,9 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nC
     cmdParser.Parse(args);
 
     bool doIntroDialogs = true;
+    gDataServerLocal = true;
+    gPythonLocal = true;
+    gSDLLocal = true;
 #ifndef PLASMA_EXTERNAL_RELEASE
     if (cmdParser.IsSpecified(kArgSkipLoginDialog))
         doIntroDialogs = false;
@@ -1103,7 +1106,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nC
         gClient.SetRequestedRenderingBackend(ParseRendererArgument(cmdParser.GetString(kArgRenderer)));
 #endif
 
-    plFileName serverIni = "server.ini";
+    plFileName serverIni = "server.offline.ini";
     if (cmdParser.IsSpecified(kArgServerIni))
         serverIni = cmdParser.GetString(kArgServerIni);
 
