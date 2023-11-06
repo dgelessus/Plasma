@@ -68,6 +68,29 @@ struct ReportNetErrorTrans : NetNotifyTrans {
     void Post() override;
 };
 
+struct RepeatedCallbackTrans : NetTrans {
+    std::function<bool()> m_callback;
+    
+    RepeatedCallbackTrans(std::function<bool()> callback) :
+        NetTrans(kNetProtocolNil, kRepeatedCallbackTrans),
+        m_callback(std::move(callback))
+    {}
+
+    bool CanStart() const override { return true; }
+    bool TimedOut() override { return false; }
+
+    bool Send() override {
+        if (m_callback()) {
+            m_state = kTransStateComplete;
+            return true;
+        } else {
+            return false;
+        }
+    }
+    bool Recv(const uint8_t[], unsigned) override { return true; }
+    void Post() override {}
+};
+
 
 /*****************************************************************************
 *
@@ -196,4 +219,9 @@ void NetClientPingEnable (bool enable) {
 //============================================================================
 void NetClientSetErrorHandler(NetClientErrorFunc errorFunc) {
     s_errorFunc = std::move(errorFunc);
+}
+
+void NetClientStartRepeatedCallback(std::function<bool()> callback)
+{
+    NetTransSend(new RepeatedCallbackTrans(std::move(callback)));
 }

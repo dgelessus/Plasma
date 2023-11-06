@@ -241,6 +241,10 @@ public:
     static bool DebuggerRequestedExit() {return requestedExit;}
     static void DebuggerRequestedExit(bool reqExit) {requestedExit = reqExit;}
 #endif
+
+    static bool StartBuiltInServer();
+    static bool PumpBuiltInServer();
+    static bool StopBuiltInServer();
 };
 
 #endif

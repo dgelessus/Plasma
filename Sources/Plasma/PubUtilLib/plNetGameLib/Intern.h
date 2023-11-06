@@ -205,6 +205,9 @@ enum ETransType {
     kGkFileSrvIpAddressRequestTrans,
     kGkAuthSrvIpAddressRequestTrans,
 
+    // NglCore.cpp addition for built-in server
+    kRepeatedCallbackTrans,
+
     kNumTransTypes
 };
 
@@ -271,6 +274,9 @@ static const char * s_transTypes[] = {
     // NglGateKeeper.cpp
     "GkFileSrvIpAddress",
     "GkAuthSrvIpAddress",
+
+    // NglCore.cpp addition for built-in server
+    "RepeatedCallbackTrans",
 
 };
 static_assert(std::size(s_transTypes) == kNumTransTypes, "Ngl Trans array and enum differ in size");

@@ -80,6 +80,7 @@ You can contact Cyan Worlds, Inc. by email legal@cyan.com
 #include "pfConsoleCore/pfConsoleEngine.h"
 #include "pfCrashHandler/plCrashCli.h"
 #include "pfPasswordStore/pfPasswordStore.h"
+#include "pfPython/cyPythonInterface.h"
 
 //
 // Defines
@@ -1209,14 +1210,36 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nC
         return PARABLE_NORMAL_EXIT;
     }
 
+    PythonInterface::initPython();
+
     // Begin initializing the client in the background
     if (!WinInit(hInst)) {
         hsMessageBox(ST_LITERAL("Failed to initialize plClient"), ST_LITERAL("Error"), hsMessageBoxNormal);
+        PythonInterface::finiPython();
+        return PARABLE_NORMAL_EXIT;
+    }
+
+    if (!PythonInterface::StartBuiltInServer()) {
+        ST::string output = PythonInterface::getOutputAndReset();
+        hsMessageBox(ST::format("Failed to start built-in server:\n{}", output), ST_LITERAL("Error"), hsMessageBoxNormal, hsMessageBoxIconError);
+        gClient.ShutdownStart();
+        gClient.ShutdownEnd();
         return PARABLE_NORMAL_EXIT;
     }
 
     NetCliAuthAutoReconnectEnable(false);
     InitNetClientComm();
+
+    NetClientStartRepeatedCallback([]() {
+        // Because Plasma's main thread holds the Python GIL,
+        // other Python threads (like the server thread) don't get a chance to run.
+        // To fix that, this does a short Python sleep in every iteration of the network message loop.
+        // This releases the GIL for a short time, allowing the server to do its thing.
+        bool ok = PythonInterface::PumpBuiltInServer();
+        // Continue running forever until Python is shut down
+        // (or the server update time slice thing fails for some other reason).
+        return !ok;
+    });
 
     curl_global_init(CURL_GLOBAL_ALL);
 

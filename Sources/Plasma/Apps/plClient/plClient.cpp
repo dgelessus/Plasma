@@ -332,6 +332,11 @@ bool plClient::Shutdown()
 
     IUnRegisterAs(fConsole, kConsoleObject_KEY);
 
+    if (!PythonInterface::StopBuiltInServer()) {
+        ST::string output = PythonInterface::getOutputAndReset();
+        hsMessageBox(ST::format("Failed to stop built-in server:\n{}", output), ST_LITERAL("Error"), hsMessageBoxNormal, hsMessageBoxIconError);
+    }
+
     PythonInterface::finiPython();
 
     IUnRegisterAs(fNewCamera, kVirtualCamera1_KEY);
@@ -2097,7 +2102,6 @@ void plClient::IOnAsyncInitComplete () {
     plSDLMgr::GetInstance()->SetNetApp(plNetClientMgr::GetInstance());
     plSDLMgr::GetInstance()->Init( plSDL::kDisallowTimeStamping );
 
-    PythonInterface::initPython();
     // set the pipeline for the python cyMisc module so that it can do a screen capture
     cyMisc::SetPipeline( fPipeline );
 

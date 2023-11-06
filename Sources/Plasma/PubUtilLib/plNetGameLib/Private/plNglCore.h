@@ -72,3 +72,5 @@ void NetClientPingEnable (bool enable);
 typedef std::function<void(ENetProtocol, ENetError)> NetClientErrorFunc;
 
 void NetClientSetErrorHandler(NetClientErrorFunc errorFunc);
+
+void NetClientStartRepeatedCallback(std::function<bool()> callback);

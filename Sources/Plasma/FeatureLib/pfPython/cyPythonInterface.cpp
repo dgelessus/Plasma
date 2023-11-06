@@ -1806,3 +1806,63 @@ pyKey* PythonInterface::GetpyKeyFromPython(PyObject* pkey)
         return nullptr;
     return pyKey::ConvertFrom(pkey);
 }
+
+bool PythonInterface::StartBuiltInServer()
+{
+    PyObject* module = ImportModule("nagus_runner");
+    if (!module) {
+        PyErr_Print();
+        return false;
+    }
+    PyObject* result = PyObject_CallMethod(module, "start_nagus", nullptr);
+    if (!result) {
+        PyErr_Print();
+        Py_DECREF(module);
+        return false;
+    }
+    Py_DECREF(result);
+    Py_DECREF(module);
+    return true;
+}
+
+bool PythonInterface::PumpBuiltInServer()
+{
+    if (!Py_IsInitialized()) {
+        return false;
+    }
+
+    PyObject* module = ImportModule("time");
+    ASSERT(module);
+    if (!module) {
+        PyErr_Print();
+        return false;
+    }
+    PyObject* result = PyObject_CallMethod(module, "sleep", "(d)", 0.001);
+    ASSERT(result);
+    if (!result) {
+        PyErr_Print();
+        Py_DECREF(module);
+        return false;
+    }
+    Py_DECREF(result);
+    Py_DECREF(module);
+    return true;
+}
+
+bool PythonInterface::StopBuiltInServer()
+{
+    PyObject* module = ImportModule("nagus_runner");
+    if (!module) {
+        PyErr_Print();
+        return false;
+    }
+    PyObject* result = PyObject_CallMethod(module, "stop_nagus", nullptr);
+    if (!result) {
+        PyErr_Print();
+        Py_DECREF(module);
+        return false;
+    }
+    Py_DECREF(result);
+    Py_DECREF(module);
+    return true;
+}
