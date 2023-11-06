@@ -369,7 +369,6 @@ void plPythonFileMod::ICallScriptMethod(func_num methodId, Args&&... args)
 
 bool plPythonFileMod::ILoadPythonCode()
 {
-#ifndef PLASMA_EXTERNAL_RELEASE
     // get code from file and execute in module
     // see if the file exists first before trying to import it
     plFileName pyfile = plFileName::Join(".", "python", ST::format("{}.py", fPythonFile));
@@ -390,7 +389,6 @@ bool plPythonFileMod::ILoadPythonCode()
         ReportError();
         return false;
     }
-#endif  //PLASMA_EXTERNAL_RELEASE
 
     // Finally, try and find the file in the Python packfile
     // ... for the external users .pak file is only used

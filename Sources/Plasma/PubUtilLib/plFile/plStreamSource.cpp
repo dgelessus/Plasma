@@ -70,8 +70,6 @@ hsStream* plStreamSource::GetFile(const plFileName& filename)
     plFileName sFilename = filename.Normalize('/');
     if (fFileData.find(sFilename) == fFileData.end())
     {
-#ifndef PLASMA_EXTERNAL_RELEASE
-        // internal releases can pull from disk
         if (plFileInfo(filename).Exists())
         {
             // file exists on disk, cache it
@@ -95,7 +93,6 @@ hsStream* plStreamSource::GetFile(const plFileName& filename)
 
             return fFileData[sFilename].fStream.get();
         }
-#endif // PLASMA_EXTERNAL_RELEASE
         return nullptr;
     }
     return fFileData[sFilename].fStream.get();
@@ -116,8 +113,6 @@ std::vector<plFileName> plStreamSource::GetListOfNames(const plFileName& dir, co
             retVal.push_back(curData->second.fFilename);
     }
 
-#ifndef PLASMA_EXTERNAL_RELEASE
-    // in internal releases, we can use on-disk files if they exist
     // Build the search string as "dir/*.ext"
     std::vector<plFileName> files = plFileSystem::ListDir(sDir, ("*." + ext).c_str());
     for (auto iter = files.begin(); iter != files.end(); ++iter)
@@ -126,7 +121,6 @@ std::vector<plFileName> plStreamSource::GetListOfNames(const plFileName& dir, co
         if (fFileData.find(norm) == fFileData.end()) // we haven't added it yet
             retVal.push_back(norm);
     }
-#endif // PLASMA_EXTERNAL_RELEASE
 
     return retVal;
 }

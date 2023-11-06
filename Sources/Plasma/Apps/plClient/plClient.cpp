@@ -1509,14 +1509,6 @@ bool plClient::MainLoop()
     }
 #endif
 
-#ifdef PLASMA_EXTERNAL_RELEASE
-    if (DebugIsDebuggerPresent())
-    {
-        NetCliAuthLogClientDebuggerConnect();
-        SetDone(true);
-    }
-#endif
-
     if (plClient::fDelayMS)
         std::this_thread::sleep_for(std::chrono::milliseconds(5));
 

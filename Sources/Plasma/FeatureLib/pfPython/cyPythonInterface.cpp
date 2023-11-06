@@ -908,14 +908,12 @@ void PythonInterface::initPython()
     PyConfig_SetString(&config, &config.program_name, L"plasma");
     config._init_main = 0;
 
-    // Allow importing from the local python directory if and only if this is an internal client.
-#ifndef PLASMA_EXTERNAL_RELEASE
+    // Allow importing from the local python directory.
     PyWideStringList_Append(&config.module_search_paths, L"./python");
     PyWideStringList_Append(&config.module_search_paths, L"./python/plasma");
     PyWideStringList_Append(&config.module_search_paths, L"./python/system");
     PyWideStringList_Append(&config.module_search_paths, L"./python/system/lib-dynload");
     config.module_search_paths_set = 1;
-#endif
 
     if (!ICheckedInit<PyConfig, Py_InitializeFromConfig, PyConfig_Clear>(config, dbgLog, "Core init failed!"))
         return;

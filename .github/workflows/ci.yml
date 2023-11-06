@@ -40,6 +40,7 @@ jobs:
         run: |
           cmake `
             -G "${{ matrix.platform.generator }}" -A "${{ matrix.platform.arch }}" `
+            -DPLASMA_BUILD_LAUNCHER=OFF `
             -DPLASMA_BUILD_TESTS=ON `
             -DPLASMA_EXTERNAL_RELEASE=${{ matrix.cfg.external }} `
             -DVCPKG_INSTALL_OPTIONS=--clean-after-build `

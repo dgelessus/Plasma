@@ -1110,41 +1110,6 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nC
     if (cmdParser.IsSpecified(kArgServerIni))
         serverIni = cmdParser.GetString(kArgServerIni);
 
-    // check to see if we were launched from the patcher
-    bool eventExists = false;
-    // we check to see if the event exists that the patcher should have created
-    HANDLE hPatcherEvent = CreateEventW(nullptr, TRUE, FALSE, L"UruPatcherEvent");
-    if (hPatcherEvent != nullptr)
-    {
-        // successfully created it, check to see if it was already created
-        if (GetLastError() == ERROR_ALREADY_EXISTS)
-        {
-            // it already existed, so the patcher is waiting, signal it so the patcher can die
-            SetEvent(hPatcherEvent);
-            eventExists = true;
-        }
-    }
-
-#ifdef PLASMA_EXTERNAL_RELEASE
-    // if the client was started directly, run the patcher, and shutdown
-    STARTUPINFOW si;
-    PROCESS_INFORMATION pi; 
-    memset(&si, 0, sizeof(si));
-    memset(&pi, 0, sizeof(pi));
-    si.cb = sizeof(si);
-
-    if (!eventExists) // if it is missing, assume patcher wasn't launched
-    {
-        if(!CreateProcessW(s_patcherExeName, nullptr, nullptr, nullptr, FALSE, 0, nullptr, nullptr, &si, &pi))
-        {
-            hsMessageBox(ST_LITERAL("Failed to launch patcher"), ST_LITERAL("Error"), hsMessageBoxNormal);
-        }
-        CloseHandle( pi.hThread );
-        CloseHandle( pi.hProcess );
-        return PARABLE_NORMAL_EXIT;
-    }
-#endif
-
     // Load an optional general.ini
     plFileName gipath = plFileName::Join(plFileSystem::GetInitPath(), "general.ini");
     FILE *generalini = plFileSystem::Open(gipath, "rb");
