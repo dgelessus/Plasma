@@ -1247,31 +1247,10 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nC
     curl_global_init(CURL_GLOBAL_ALL);
 
     bool                needExit = false;
-    LoginDialogParam    loginParam;
-    memset(&loginParam, 0, sizeof(loginParam));
-    LoadUserPass(&loginParam);
-
-    if (!doIntroDialogs && loginParam.remember) {
-        ENetError auth;
-
-        NetCommSetAccountUsernamePassword(loginParam.username, loginParam.namePassHash);
-        bool cancelled = AuthenticateNetClientComm(&auth, nullptr);
-
-        if (IS_NET_ERROR(auth) || cancelled) {
-            doIntroDialogs = true;
-
-            loginParam.authError = auth;
-
-            if (cancelled)
-            {
-                NetCommDisconnect();
-            }
-        }
-    }
-
-    if (doIntroDialogs) {
-        needExit = ::DialogBoxParam( hInst, MAKEINTRESOURCE( IDD_URULOGIN_MAIN ), nullptr, UruLoginDialogProc, (LPARAM)&loginParam ) <= 0;
-    }
+    ENetError auth;
+    NetCommSetAccountUsernamePassword(ST_LITERAL("Offline"), ShaDigest{});
+    bool cancelled = AuthenticateNetClientComm(&auth, nullptr);
+    needExit = IS_NET_ERROR(auth) || cancelled;
 
     if (doIntroDialogs && !needExit) {
         HINSTANCE hRichEdDll = LoadLibrary("RICHED20.DLL");
