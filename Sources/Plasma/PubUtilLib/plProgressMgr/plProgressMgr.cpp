@@ -69,7 +69,8 @@ std::vector<ST::string> plProgressMgr::fImageRotation;
 
 const ST::string plProgressMgr::fStaticTextIDs[] = {
     ST_LITERAL("xLoading_Linking_Text.png"),
-    ST_LITERAL("xLoading_Updating_Text.png")
+    ST_LITERAL("xLoading_Updating_Text.png"),
+    {},
 };
 
 //// Constructor & Destructor ////////////////////////////////////////////////
@@ -79,7 +80,7 @@ plProgressMgr::plProgressMgr()
     fOperations = nullptr;
     fManager = this;
     fCallbackProc = nullptr;
-    fCurrentStaticText = kNone;
+    fCurrentStaticText = kLoadingGlobal;
 
     // Find linking-animation frame IDs and store the sorted list
     std::regex re("xLoading_Linking\\.[0-9]+?\\.png");

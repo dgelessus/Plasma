@@ -68,7 +68,7 @@ class plResPatcher
     void OnProgressTick(uint64_t dl, uint64_t total, const ST::string& msg);
 
     class pfPatcher* CreatePatcher();
-    void InitProgress();
+    void InitProgress(bool global);
 
 public:
     static plResPatcher* GetInstance();

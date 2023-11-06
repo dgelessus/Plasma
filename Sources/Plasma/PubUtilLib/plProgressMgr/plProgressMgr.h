@@ -197,6 +197,7 @@ class plProgressMgr
         {
             kNone,
             kUpdateText,
+            kLoadingGlobal,
         };
 
     private:

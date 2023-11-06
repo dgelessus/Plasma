@@ -157,10 +157,10 @@ pfPatcher* plResPatcher::CreatePatcher()
     return patcher;
 }
 
-void plResPatcher::InitProgress()
+void plResPatcher::InitProgress(bool global)
 {
     // this is deleted in plAgeLoader::MsgReceive for thread safety
-    fProgress = plProgressMgr::GetInstance()->RegisterOperation(0.f, nullptr, plProgressMgr::kUpdateText);
+    fProgress = plProgressMgr::GetInstance()->RegisterOperation(0.f, nullptr, global ? plProgressMgr::kLoadingGlobal : plProgressMgr::kUpdateText);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -175,7 +175,7 @@ plResPatcher::~plResPatcher()
 
 void plResPatcher::Update(const std::vector<ST::string>& manifests)
 {
-    InitProgress();
+    InitProgress(true);
     pfPatcher* patcher = CreatePatcher();
     if (!gDataServerLocal)
         patcher->RequestManifest(manifests);
@@ -184,7 +184,7 @@ void plResPatcher::Update(const std::vector<ST::string>& manifests)
 
 void plResPatcher::Update(const ST::string& manifest)
 {
-    InitProgress();
+    InitProgress(false);
     pfPatcher* patcher = CreatePatcher();
     if (!gDataServerLocal)
         patcher->RequestManifest(manifest);

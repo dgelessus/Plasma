@@ -61,6 +61,7 @@ enum
 {
     kTitleColor = 0xccb0b0b0,
     kProgressBarColor = 0xff302b3a,
+    kGlobalProgressBarColor = 0xff353a2b,
     kInfoColor = 0xff635e6d,
 };
 
@@ -86,7 +87,7 @@ void    plDTProgressMgr::DeclareThyself()
 
 void    plDTProgressMgr::Activate()
 {
-    if (fStaticTextPlate == nullptr && fCurrentStaticText != plProgressMgr::kNone)
+    if (fStaticTextPlate == nullptr && fCurrentStaticText != plProgressMgr::kNone && fCurrentStaticText != plProgressMgr::kLoadingGlobal)
     {
         plPlateManager::Instance().CreatePlate(&fStaticTextPlate);
 
@@ -97,7 +98,7 @@ void    plDTProgressMgr::Activate()
         fStaticTextPlate->SetPosition(0, 0.5f, 0);
     }
 
-    if (fActivePlate == nullptr)
+    if (fActivePlate == nullptr && fCurrentStaticText != plProgressMgr::kLoadingGlobal)
     {
         plPlateManager::Instance().CreatePlate( &fActivePlate );
 
@@ -208,7 +209,8 @@ bool    plDTProgressMgr::IDrawTheStupidThing(plPipeline *p, plOperationProgress 
 
     // draw a progress bar
     if (prog->GetMax() > 0.f) {
-        text.Draw3DBorder(x, y, x + width - 1, y + height - 1, kProgressBarColor, kProgressBarColor);
+        uint32_t color = fCurrentStaticText == plProgressMgr::kLoadingGlobal ? kGlobalProgressBarColor : kProgressBarColor;
+        text.Draw3DBorder(x, y, x + width - 1, y + height - 1, color, color);
 
         x += (2 * scale);
         y += (2 * scale);
@@ -224,7 +226,7 @@ bool    plDTProgressMgr::IDrawTheStupidThing(plPipeline *p, plOperationProgress 
 
         rightX = drawX + drawWidth;
         if (drawWidth > 0)
-            text.DrawRect(drawX, y, rightX, y + height, kProgressBarColor);
+            text.DrawRect(drawX, y, rightX, y + height, color);
         y += height + (2 * scale);
 
         drew_something = true;

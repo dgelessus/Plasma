@@ -1298,7 +1298,7 @@ void    plClient::IStartProgress( const char *title, float len )
     }
     else
     {
-        fProgressBar = plProgressMgr::GetInstance()->RegisterOperation(len, title, plProgressMgr::kNone, false, true);
+        fProgressBar = plProgressMgr::GetInstance()->RegisterOperation(len, title, plProgressMgr::kLoadingGlobal, false, true);
 #ifndef PLASMA_EXTERNAL_RELEASE
         if (plDispatchLogBase::IsLogging())
             plDispatchLogBase::GetInstance()->LogStatusBarChange(fProgressBar->GetTitle(), "starting");
@@ -2113,7 +2113,7 @@ void plClient::IOnAsyncInitComplete () {
     // global loading bar in advance and set it to a big enough range that when the GUI's
     // are done loading about the right amount of it is filled.
     fNumLoadingRooms++;
-    IStartProgress("Loading Global...", 0);
+    IStartProgress("Loading Global...", 20000);
 
     /// Init the KI
     pfGameGUIMgr    *mgr = pfGameGUIMgr::GetInstance();
@@ -2123,7 +2123,6 @@ void plClient::IOnAsyncInitComplete () {
     pfJournalBook::SingletonInit();
 
     SetHoldLoadRequests(true);
-    fProgressBar->SetLength(fProgressBar->GetProgress());
 
     plClothingMgr::Init();
     // Load in any clothing data
