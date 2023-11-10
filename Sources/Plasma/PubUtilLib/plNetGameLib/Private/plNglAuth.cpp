@@ -1396,6 +1396,7 @@ static void CheckedReconnect (CliAuConn * conn, ENetError error) {
 
     // no auto-reconnect or haven't heard from the server in a while?
     if (!conn->AutoReconnectEnabled() || (int)disconnectedMs >= (int)kDisconnectedTimeoutMs) {
+        conn->StopAutoReconnect();
         // Cancel all transactions in progress on this connection.
         NetTransCancelByConnId(conn->seq, kNetErrTimeout);
         // conn is dead.
