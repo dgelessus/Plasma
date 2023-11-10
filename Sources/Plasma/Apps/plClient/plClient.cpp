@@ -2105,7 +2105,11 @@ void plClient::IOnAsyncInitComplete () {
     // global loading bar in advance and set it to a big enough range that when the GUI's
     // are done loading about the right amount of it is filled.
     fNumLoadingRooms++;
-    IStartProgress("Loading Global...", 20000);
+    const char* title = nullptr;
+#ifndef PLASMA_EXTERNAL_RELEASE
+    title = "Loading Global...";
+#endif
+    IStartProgress(title, 20000);
 
     /// Init the KI
     pfGameGUIMgr    *mgr = pfGameGUIMgr::GetInstance();
