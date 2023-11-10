@@ -37,6 +37,14 @@ def load_config(config_file):
     return config
 
 
+async def async_nagus_wrapper(config):
+    global loop
+    global server_task
+    loop = asyncio.get_event_loop()
+    server_task = loop.create_task(nagus.__main__.async_main(config))
+    await server_task
+
+
 def start_nagus():
     config = load_config(nagus.__main__.DEFAULT_CONFIG_FILE_NAME)
 
@@ -49,7 +57,6 @@ def start_nagus():
     logger = logging.getLogger(__name__)
 
     def _run_nagus():
-        global loop
         global server_task
 
         try:
@@ -58,20 +65,13 @@ def start_nagus():
             except FileExistsError:
                 pass
 
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-
             with server_is_running_sema:
                 try:
-                    logger.info("asyncio event loop set up. Proceeding to run NAGUS...")
-                    server_task = loop.create_task(nagus.__main__.async_main(config))
-                    loop.run_until_complete(server_task)
+                    asyncio.run(async_nagus_wrapper(config))
                 except asyncio.CancelledError:
                     logger.info("Server task cancelled - shutting down NAGUS...")
                 finally:
                     server_task = None
-                    loop.close()
-                    loop = None
         except BaseException:
             logger.error("Unhandled exception in NAGUS server event loop thread", exc_info=True)
 
