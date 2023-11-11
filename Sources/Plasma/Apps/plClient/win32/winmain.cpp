@@ -744,6 +744,7 @@ INT_PTR CALLBACK UruLoginDialogProc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPA
         {
             s_loginDlgRunning = true;
             s_statusThread = std::thread([hwndDlg]() {
+                hsThread::SetThisThreadName(ST_LITERAL("LoginDialogShardStatus"));
 #ifdef USE_VLD
                 VLDEnable();
 #endif
