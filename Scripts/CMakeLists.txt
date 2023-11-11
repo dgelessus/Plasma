@@ -1,3 +1,9 @@
+include(SubmoduleUtils)
+plasma_init_git_submodule("Scripts/NAGUS" RESULT has_nagus_module)
+if(NOT has_nagus_module)
+    message(FATAL_ERROR "Failed to check out NAGUS submodule")
+endif()
+
 file(GLOB_RECURSE GameScripts "${CMAKE_CURRENT_SOURCE_DIR}/Python/*.py")
 file(GLOB_RECURSE GameSDL "${CMAKE_CURRENT_SOURCE_DIR}/SDL/*.sdl")
 file(GLOB_RECURSE GameData "${CMAKE_CURRENT_SOURCE_DIR}/dat/*.age" "${CMAKE_CURRENT_SOURCE_DIR}/dat/*.fni")
