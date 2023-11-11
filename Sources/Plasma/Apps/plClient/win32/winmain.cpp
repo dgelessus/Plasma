@@ -596,7 +596,7 @@ INT_PTR CALLBACK UruTOSDialogProc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARA
     {
     case WM_INITDIALOG:
         {
-            SetWindowText(hwndDlg, "End User License Agreement");
+            SetWindowText(hwndDlg, "Uru - Read Me");
             SendMessage(hwndDlg, WM_SETICON, ICON_BIG, (LPARAM)LoadIcon((HINSTANCE)lParam, MAKEINTRESOURCE(IDI_ICON_DIRT)));
 
             hsUNIXStream stream;

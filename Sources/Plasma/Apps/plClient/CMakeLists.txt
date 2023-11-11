@@ -73,6 +73,7 @@ set(plClient_RESOURCES
 
 set(plClient_TEXT
     ${Plasma_SOURCE_DIR}/Docs/ReleaseNotes/ReleaseNotes.txt
+    ${Plasma_SOURCE_DIR}/Docs/ReleaseNotes/TOS.txt
 )
 
 if(WIN32)

@@ -1,0 +1,26 @@
+This is an EXPERIMENTAL PROOF-OF-CONCEPT UNTESTED offline MOULa
+client with a built-in local server. This client doesn't connect to any
+online server and the built-in server is not accessible over the network.
+
+This is NOT a playable single-player version of MOULa!
+
+Nothing has been adjusted for single-player gameplay. Various things
+aren't configured properly, so parts of the game are inaccessible or
+unplayable. The "server" part is incomplete and unstable, so the game
+may randomly hang, exit with a "net" error, or crash outright. Progress is
+saved automatically on your local disk, but the save data may get
+corrupted randomly.
+
+In short: don't use this if you want to play the game for real. Otherwise,
+have fun poking around!
+
+----------------------------------------------------------------------------------------
+
+This program is free software.
+
+The game engine and scripts (CyanWorlds.com Engine) are licensed
+under the GNU GPL version 3 (or later). For details, see COPYING.txt,
+CREDITS.txt, and LICENSE.txt in the "license" folder.
+
+The built-in server (NAGUS) is licensed under the GNU AGPL version 3
+(or later). For details, see COPYING-NAGUS.txt in the "license" folder.
