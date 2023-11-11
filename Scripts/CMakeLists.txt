@@ -16,6 +16,18 @@ install(
     FILES_MATCHING PATTERN "*.ini"
 )
 install(
+    FILES
+        ${Plasma_SOURCE_DIR}/COPYING.txt
+        ${Plasma_SOURCE_DIR}/CREDITS.txt
+        ${Plasma_SOURCE_DIR}/LICENSE.txt
+    DESTINATION client/license
+)
+install(
+    FILES "NAGUS/COPYING.txt"
+    DESTINATION client/license
+    RENAME COPYING-NAGUS.txt
+)
+install(
     DIRECTORY "Python/"
     DESTINATION client/python
     FILES_MATCHING PATTERN "*.py"
