@@ -316,33 +316,25 @@ struct NetCliAuthFileInfo {
     char16_t    filename[kNetDefaultStringSize];
     unsigned    filesize;
 };
-typedef void (*FNetCliAuthFileListRequestCallback)(
+using FNetCliAuthFileListRequestCallback = std::function<void(
     ENetError                   result,
-    void *                      param,
     const NetCliAuthFileInfo    infoArr[],
     unsigned                    infoCount
-);
+)>;
 void NetCliAuthFileListRequest (
     const char16_t                      dir[],
     const char16_t                      ext[],
-    FNetCliAuthFileListRequestCallback  callback,
-    void *                              param
+    FNetCliAuthFileListRequestCallback  callback
 );
 
 //============================================================================
 // File Download
 //============================================================================
-typedef void (*FNetCliAuthFileRequestCallback)(
-    ENetError           result,
-    void *              param,
-    const plFileName &  filename,
-    hsStream *          writer
-);
+using FNetCliAuthFileRequestCallback = std::function<void(ENetError result)>;
 void NetCliAuthFileRequest (
     const plFileName &              filename,
     hsStream *                      writer,
-    FNetCliAuthFileRequestCallback  callback,
-    void *                          param
+    FNetCliAuthFileRequestCallback  callback
 );
 
 //============================================================================
