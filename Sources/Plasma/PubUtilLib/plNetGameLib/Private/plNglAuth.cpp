@@ -113,14 +113,12 @@ struct CliAuConn : hsRefCnt, AsyncNotifySocketCallbacks {
 //============================================================================
 struct PingRequestTrans : NetAuthTrans {
     FNetCliAuthPingRequestCallback  m_callback;
-    void *                          m_param;
     unsigned                        m_pingAtMs;
     unsigned                        m_replyAtMs;
     std::vector<uint8_t>            m_payload;
     
     PingRequestTrans (
         FNetCliAuthPingRequestCallback  callback,
-        void *                          param,
         unsigned                        pingAtMs,
         unsigned                        payloadBytes,
         const void *                    payload
@@ -139,7 +137,6 @@ struct PingRequestTrans : NetAuthTrans {
 //============================================================================
 struct AccountExistsRequestTrans : NetAuthTrans {
     FNetCliAuthAccountExistsRequestCallback     m_callback;
-    void *                                      m_param;
 
     // send    
     char16_t                                    m_accountName[kMaxAccountNameLength];
@@ -151,7 +148,6 @@ struct AccountExistsRequestTrans : NetAuthTrans {
     
     AccountExistsRequestTrans (
         FNetCliAuthAccountExistsRequestCallback callback,
-        void *                          param,
         const char16_t                  accountName[]
     );
 
@@ -168,7 +164,6 @@ struct AccountExistsRequestTrans : NetAuthTrans {
 //============================================================================
 struct LoginRequestTrans : NetAuthTrans {
     FNetCliAuthLoginRequestCallback m_callback;
-    void *                          m_param;
 
     plUUID                          m_accountId;
     unsigned                        m_accountFlags;
@@ -176,10 +171,7 @@ struct LoginRequestTrans : NetAuthTrans {
     unsigned                        m_playerCount;
     NetCliAuthPlayerInfo            m_players[kMaxPlayersPerAccount];
 
-    LoginRequestTrans (
-        FNetCliAuthLoginRequestCallback callback,
-        void *                          param
-    );
+    LoginRequestTrans(FNetCliAuthLoginRequestCallback callback);
 
     void AddPlayer (
         unsigned    playerInt,
@@ -201,7 +193,6 @@ struct LoginRequestTrans : NetAuthTrans {
 //============================================================================
 struct AgeRequestTrans : NetAuthTrans {
     FNetCliAuthAgeRequestCallback       m_callback;
-    void *                              m_param;
     ST::string                          m_ageName;
     unsigned                            m_ageMcpId;
     plUUID                              m_ageInstId;
@@ -211,8 +202,7 @@ struct AgeRequestTrans : NetAuthTrans {
     AgeRequestTrans (
         const ST::string&                   ageName,
         const plUUID&                       ageInstId,
-        FNetCliAuthAgeRequestCallback       callback,
-        void *                              param
+        FNetCliAuthAgeRequestCallback       callback
     );
     ~AgeRequestTrans ();
 
@@ -229,7 +219,6 @@ struct AgeRequestTrans : NetAuthTrans {
 //============================================================================
 struct AccountCreateRequestTrans : NetAuthTrans {
     FNetCliAuthAccountCreateRequestCallback m_callback;
-    void *                                  m_param;
 
     // send    
     char16_t                                m_accountName[kMaxAccountNameLength];
@@ -245,8 +234,7 @@ struct AccountCreateRequestTrans : NetAuthTrans {
         const char16_t                          password[],
         unsigned                                accountFlags,
         unsigned                                billingType,
-        FNetCliAuthAccountCreateRequestCallback callback,
-        void *                                  param
+        FNetCliAuthAccountCreateRequestCallback callback
     );
 
     bool Send() override;
@@ -262,7 +250,6 @@ struct AccountCreateRequestTrans : NetAuthTrans {
 //============================================================================
 struct AccountCreateFromKeyRequestTrans : NetAuthTrans {
     FNetCliAuthAccountCreateFromKeyRequestCallback  m_callback;
-    void *                                          m_param;
 
     // send    
     char16_t                                m_accountName[kMaxAccountNameLength];
@@ -279,8 +266,7 @@ struct AccountCreateFromKeyRequestTrans : NetAuthTrans {
         const char16_t                                  password[],
         const plUUID&                                   key,
         unsigned                                        billingType,
-        FNetCliAuthAccountCreateFromKeyRequestCallback  callback,
-        void *                                          param
+        FNetCliAuthAccountCreateFromKeyRequestCallback  callback
     );
 
     bool Send() override;
@@ -296,7 +282,6 @@ struct AccountCreateFromKeyRequestTrans : NetAuthTrans {
 //============================================================================
 struct PlayerCreateRequestTrans : NetAuthTrans {
     FNetCliAuthPlayerCreateRequestCallback  m_callback;
-    void *                                  m_param;
 
     // send
     ST::string                              m_playerName;
@@ -311,8 +296,7 @@ struct PlayerCreateRequestTrans : NetAuthTrans {
         const ST::string&                       playerName,
         const ST::string&                       avatarShape,
         const ST::string&                       friendInvite,
-        FNetCliAuthPlayerCreateRequestCallback  callback,
-        void *                                  param
+        FNetCliAuthPlayerCreateRequestCallback  callback
     );
 
     bool Send() override;
@@ -328,7 +312,6 @@ struct PlayerCreateRequestTrans : NetAuthTrans {
 //============================================================================
 struct PlayerDeleteRequestTrans : NetAuthTrans {
     FNetCliAuthPlayerDeleteRequestCallback  m_callback;
-    void *                                  m_param;
 
     // send
     unsigned                                m_playerId;
@@ -339,8 +322,7 @@ struct PlayerDeleteRequestTrans : NetAuthTrans {
 
     PlayerDeleteRequestTrans (
         unsigned                                playerId,
-        FNetCliAuthPlayerDeleteRequestCallback  callback,
-        void *                                  param
+        FNetCliAuthPlayerDeleteRequestCallback  callback
     );
 
     bool Send() override;
@@ -356,15 +338,13 @@ struct PlayerDeleteRequestTrans : NetAuthTrans {
 //============================================================================
 struct UpgradeVisitorRequestTrans : NetAuthTrans {
     FNetCliAuthUpgradeVisitorRequestCallback    m_callback;
-    void *                                      m_param;
 
     // send
     unsigned                                m_playerId;
 
     UpgradeVisitorRequestTrans (
         unsigned                                    playerId,
-        FNetCliAuthUpgradeVisitorRequestCallback    callback,
-        void *                                      param
+        FNetCliAuthUpgradeVisitorRequestCallback    callback
     );
 
     bool Send() override;
@@ -380,13 +360,11 @@ struct UpgradeVisitorRequestTrans : NetAuthTrans {
 //============================================================================
 struct SetPlayerRequestTrans : NetAuthTrans {
     FNetCliAuthSetPlayerRequestCallback m_callback;
-    void *                              m_param;
     unsigned                            m_playerInt;
 
     SetPlayerRequestTrans (
         unsigned                            playerInt,
-        FNetCliAuthSetPlayerRequestCallback callback,
-        void *                              param
+        FNetCliAuthSetPlayerRequestCallback callback
     );
     
     // This transaction doesn't timeout since a client starting from a clean
@@ -406,7 +384,6 @@ struct SetPlayerRequestTrans : NetAuthTrans {
 //============================================================================
 struct AccountChangePasswordRequestTrans : NetAuthTrans {
     FNetCliAuthAccountChangePasswordRequestCallback m_callback;
-    void *                                          m_param;
 
     // send
     ST::string                              m_accountName;
@@ -415,8 +392,7 @@ struct AccountChangePasswordRequestTrans : NetAuthTrans {
     AccountChangePasswordRequestTrans (
         const ST::string&                               accountName,
         const ST::string&                               password,
-        FNetCliAuthAccountChangePasswordRequestCallback callback,
-        void *                                          param
+        FNetCliAuthAccountChangePasswordRequestCallback callback
     );
 
     bool Send() override;
@@ -432,8 +408,7 @@ struct AccountChangePasswordRequestTrans : NetAuthTrans {
 //============================================================================
 struct GetPublicAgeListTrans : NetAuthTrans {
     FNetCliAuthGetPublicAgeListCallback     m_callback;
-    void *                                  m_param;
-    
+
     // send
     ST::string                              m_ageName;
 
@@ -442,8 +417,7 @@ struct GetPublicAgeListTrans : NetAuthTrans {
     
     GetPublicAgeListTrans (
         const ST::string&                   ageName,
-        FNetCliAuthGetPublicAgeListCallback callback,
-        void *                              param
+        FNetCliAuthGetPublicAgeListCallback callback
     );
 
     bool Send() override;
@@ -459,7 +433,6 @@ struct GetPublicAgeListTrans : NetAuthTrans {
 //============================================================================
 struct AccountSetRolesRequestTrans : NetAuthTrans {
     FNetCliAuthAccountSetRolesRequestCallback   m_callback;
-    void *                                      m_param;
 
     // send    
     char16_t                                m_accountName[kMaxAccountNameLength];
@@ -468,8 +441,7 @@ struct AccountSetRolesRequestTrans : NetAuthTrans {
     AccountSetRolesRequestTrans (
         const char16_t                              accountName[],
         unsigned                                    accountFlags,
-        FNetCliAuthAccountSetRolesRequestCallback   callback,
-        void *                                      param
+        FNetCliAuthAccountSetRolesRequestCallback   callback
     );
 
     bool Send() override;
@@ -485,7 +457,6 @@ struct AccountSetRolesRequestTrans : NetAuthTrans {
 //============================================================================
 struct AccountSetBillingTypeRequestTrans : NetAuthTrans {
     FNetCliAuthAccountSetBillingTypeRequestCallback m_callback;
-    void *                                          m_param;
 
     // send    
     char16_t                                m_accountName[kMaxAccountNameLength];
@@ -494,8 +465,7 @@ struct AccountSetBillingTypeRequestTrans : NetAuthTrans {
     AccountSetBillingTypeRequestTrans (
         const char16_t                                  accountName[],
         unsigned                                        billingType,
-        FNetCliAuthAccountSetBillingTypeRequestCallback callback,
-        void *                                          param
+        FNetCliAuthAccountSetBillingTypeRequestCallback callback
     );
 
     bool Send() override;
@@ -511,15 +481,13 @@ struct AccountSetBillingTypeRequestTrans : NetAuthTrans {
 //============================================================================
 struct AccountActivateRequestTrans : NetAuthTrans {
     FNetCliAuthAccountActivateRequestCallback   m_callback;
-    void *                                      m_param;
 
     // send    
     plUUID                                      m_activationKey;
 
     AccountActivateRequestTrans (
         const plUUID&                               activationKey,
-        FNetCliAuthAccountActivateRequestCallback   callback,
-        void *                                      param
+        FNetCliAuthAccountActivateRequestCallback   callback
     );
 
     bool Send() override;
@@ -909,7 +877,6 @@ struct NotifyNewBuildTrans : NetNotifyTrans {
 //============================================================================
 struct SetPlayerBanStatusRequestTrans : NetAuthTrans {
     FNetCliAuthSetPlayerBanStatusRequestCallback    m_callback;
-    void *                                          m_param;
 
     // send    
     unsigned                                            m_playerId;
@@ -918,8 +885,7 @@ struct SetPlayerBanStatusRequestTrans : NetAuthTrans {
     SetPlayerBanStatusRequestTrans (
         unsigned                                        playerId,
         unsigned                                        banned,
-        FNetCliAuthSetPlayerBanStatusRequestCallback    callback,
-        void *                                          param
+        FNetCliAuthSetPlayerBanStatusRequestCallback    callback
     );
 
     bool Send() override;
@@ -935,7 +901,6 @@ struct SetPlayerBanStatusRequestTrans : NetAuthTrans {
 //============================================================================
 struct ChangePlayerNameRequestTrans : NetAuthTrans {
     FNetCliAuthChangePlayerNameRequestCallback  m_callback;
-    void *                                      m_param;
 
     // send    
     unsigned                                        m_playerId;
@@ -944,8 +909,7 @@ struct ChangePlayerNameRequestTrans : NetAuthTrans {
     ChangePlayerNameRequestTrans (
         unsigned                                    playerId,
         const char16_t                              newName[],
-        FNetCliAuthChangePlayerNameRequestCallback  callback,
-        void *                                      param
+        FNetCliAuthChangePlayerNameRequestCallback  callback
     );
 
     bool Send() override;
@@ -961,7 +925,6 @@ struct ChangePlayerNameRequestTrans : NetAuthTrans {
 //============================================================================
 struct SendFriendInviteTrans : NetAuthTrans {
     FNetCliAuthSendFriendInviteCallback m_callback;
-    void *                              m_param;
 
     // send
     ST::string                            m_emailAddress;
@@ -972,8 +935,7 @@ struct SendFriendInviteTrans : NetAuthTrans {
         const ST::string&                       emailAddr,
         const ST::string&                       toName,
         const plUUID&                           inviteUuid,
-        FNetCliAuthSendFriendInviteCallback     callback,
-        void *                                  param
+        FNetCliAuthSendFriendInviteCallback     callback
     );
 
     bool Send() override;
@@ -1951,13 +1913,11 @@ static NetMsgInitRecv s_recv[] = {
 //============================================================================
 PingRequestTrans::PingRequestTrans (
     FNetCliAuthPingRequestCallback  callback,
-    void *                          param,
     unsigned                        pingAtMs,
     unsigned                        payloadBytes,
     const void *                    payload
 ) : NetAuthTrans(kPingRequestTrans)
-,   m_callback(callback)
-,   m_param(param)
+,   m_callback(std::move(callback))
 ,   m_pingAtMs(pingAtMs)
 ,   m_payload((const uint8_t *)payload, (const uint8_t *)payload + payloadBytes)
 {
@@ -1987,7 +1947,6 @@ void PingRequestTrans::Post () {
 
     m_callback(
         m_result,
-        m_param,
         m_pingAtMs,
         m_replyAtMs,
         m_payload.size(),
@@ -2020,8 +1979,8 @@ bool PingRequestTrans::Recv (
 //============================================================================
 AccountExistsRequestTrans::AccountExistsRequestTrans(
         FNetCliAuthAccountExistsRequestCallback callback,
-        void* param, const char16_t accountName[])
-    : NetAuthTrans(kPingRequestTrans), m_callback(callback), m_param(param),
+        const char16_t accountName[])
+    : NetAuthTrans(kPingRequestTrans), m_callback(std::move(callback)),
       m_exists()
 {
     StrCopy(m_accountName, accountName, kMaxAccountNameLength);
@@ -2049,7 +2008,6 @@ void AccountExistsRequestTrans::Post () {
 
     m_callback(
         m_result,
-        m_param,
         m_exists
     );
 }
@@ -2076,9 +2034,8 @@ bool AccountExistsRequestTrans::Recv (
 ***/
 
 //============================================================================
-LoginRequestTrans::LoginRequestTrans(
-        FNetCliAuthLoginRequestCallback callback, void* param)
-    : NetAuthTrans(kLoginRequestTrans), m_callback(callback), m_param(param),
+LoginRequestTrans::LoginRequestTrans(FNetCliAuthLoginRequestCallback callback)
+    : NetAuthTrans(kLoginRequestTrans), m_callback(std::move(callback)),
       m_accountId(kNilUuid), m_accountFlags(), m_playerCount(), m_billingType()
 {
     memset(&m_players, 0, sizeof(m_players));
@@ -2149,7 +2106,6 @@ bool LoginRequestTrans::Send () {
 void LoginRequestTrans::Post () {
     m_callback(
         m_result,
-        m_param,
         m_accountId,
         m_accountFlags,
         m_billingType,
@@ -2201,9 +2157,9 @@ bool LoginRequestTrans::Recv (
 //============================================================================
 AgeRequestTrans::AgeRequestTrans(
         const ST::string& ageName, const plUUID& ageInstId,
-        FNetCliAuthAgeRequestCallback callback, void* param)
+        FNetCliAuthAgeRequestCallback callback)
     : NetAuthTrans(kAgeRequestTrans), m_ageName(ageName), m_ageInstId(ageInstId),
-      m_callback(callback), m_param(param), m_ageMcpId(), m_ageVaultId(),
+      m_callback(std::move(callback)), m_ageMcpId(), m_ageVaultId(),
       m_gameSrvNode()
 { }
 
@@ -2237,7 +2193,6 @@ void AgeRequestTrans::Post () {
 
     m_callback(
         m_result,
-        m_param,
         m_ageMcpId,
         m_ageVaultId,
         m_ageInstId,
@@ -2272,11 +2227,9 @@ AccountCreateRequestTrans::AccountCreateRequestTrans (
     const char16_t                          password[],
     unsigned                                accountFlags,
     unsigned                                billingType,
-    FNetCliAuthAccountCreateRequestCallback callback,
-    void *                                  param
+    FNetCliAuthAccountCreateRequestCallback callback
 ) : NetAuthTrans(kAccountCreateRequestTrans)
-,   m_callback(callback)
-,   m_param(param)
+,   m_callback(std::move(callback))
 ,   m_accountFlags(accountFlags)
 ,   m_billingType(billingType)
 {
@@ -2312,7 +2265,6 @@ bool AccountCreateRequestTrans::Send () {
 void AccountCreateRequestTrans::Post () {
     m_callback(
         m_result,
-        m_param,
         m_accountId
     );
 }
@@ -2342,11 +2294,9 @@ AccountCreateFromKeyRequestTrans::AccountCreateFromKeyRequestTrans (
     const char16_t                                  password[],
     const plUUID&                                   key,
     unsigned                                        billingType,
-    FNetCliAuthAccountCreateFromKeyRequestCallback  callback,
-    void *                                          param
+    FNetCliAuthAccountCreateFromKeyRequestCallback  callback
 ) : NetAuthTrans(kAccountCreateFromKeyRequestTrans)
-,   m_callback(callback)
-,   m_param(param)
+,   m_callback(std::move(callback))
 ,   m_billingType(billingType)
 ,   m_key(key)
 {
@@ -2382,7 +2332,6 @@ bool AccountCreateFromKeyRequestTrans::Send () {
 void AccountCreateFromKeyRequestTrans::Post () {
     m_callback(
         m_result,
-        m_param,
         m_accountId,
         m_activationKey
     );
@@ -2413,14 +2362,12 @@ PlayerCreateRequestTrans::PlayerCreateRequestTrans (
     const ST::string&                       playerName,
     const ST::string&                       avatarShape,
     const ST::string&                       friendInvite,
-    FNetCliAuthPlayerCreateRequestCallback  callback,
-    void *                                  param
+    FNetCliAuthPlayerCreateRequestCallback  callback
 ) : NetAuthTrans(kPlayerCreateRequestTrans)
 ,   m_playerName(playerName)
 ,   m_avatarShape(avatarShape)
 ,   m_friendInvite(friendInvite)
-,   m_callback(callback)
-,   m_param(param)
+,   m_callback(std::move(callback))
 {
 }
 
@@ -2450,7 +2397,6 @@ bool PlayerCreateRequestTrans::Send () {
 void PlayerCreateRequestTrans::Post () {
     m_callback(
         m_result,
-        m_param,
         m_playerInfo
     );
 }
@@ -2482,11 +2428,9 @@ bool PlayerCreateRequestTrans::Recv (
 //============================================================================
 PlayerDeleteRequestTrans::PlayerDeleteRequestTrans (
     unsigned                                playerId,
-    FNetCliAuthPlayerDeleteRequestCallback  callback,
-    void *                                  param
+    FNetCliAuthPlayerDeleteRequestCallback  callback
 ) : NetAuthTrans(kPlayerDeleteRequestTrans)
-,   m_callback(callback)
-,   m_param(param)
+,   m_callback(std::move(callback))
 ,   m_playerId(playerId)
 {
 }
@@ -2509,10 +2453,7 @@ bool PlayerDeleteRequestTrans::Send () {
 
 //============================================================================
 void PlayerDeleteRequestTrans::Post () {
-    m_callback(
-        m_result,
-        m_param
-    );
+    m_callback(m_result);
 }
 
 //============================================================================
@@ -2536,11 +2477,9 @@ bool PlayerDeleteRequestTrans::Recv (
 //============================================================================
 UpgradeVisitorRequestTrans::UpgradeVisitorRequestTrans (
     unsigned                                    playerId,
-    FNetCliAuthUpgradeVisitorRequestCallback    callback,
-    void *                                      param
+    FNetCliAuthUpgradeVisitorRequestCallback    callback
 ) : NetAuthTrans(kUpgradeVisitorRequestTrans)
-,   m_callback(callback)
-,   m_param(param)
+,   m_callback(std::move(callback))
 ,   m_playerId(playerId)
 {
 }
@@ -2563,10 +2502,7 @@ bool UpgradeVisitorRequestTrans::Send () {
 
 //============================================================================
 void UpgradeVisitorRequestTrans::Post () {
-    m_callback(
-        m_result,
-        m_param
-    );
+    m_callback(m_result);
 }
 
 //============================================================================
@@ -2590,13 +2526,10 @@ bool UpgradeVisitorRequestTrans::Recv (
 //============================================================================
 SetPlayerRequestTrans::SetPlayerRequestTrans (
     unsigned                            playerInt,
-    FNetCliAuthSetPlayerRequestCallback callback,
-    void *                              param
-
+    FNetCliAuthSetPlayerRequestCallback callback
 ) : NetAuthTrans(kSetPlayerRequestTrans)
 ,   m_playerInt(playerInt)
-,   m_callback(callback)
-,   m_param(param)
+,   m_callback(std::move(callback))
 {
 }
 
@@ -2618,7 +2551,7 @@ bool SetPlayerRequestTrans::Send () {
 
 //============================================================================
 void SetPlayerRequestTrans::Post () {
-    m_callback(m_result, m_param);
+    m_callback(m_result);
 }
 
 //============================================================================
@@ -2642,12 +2575,10 @@ bool SetPlayerRequestTrans::Recv (
 AccountChangePasswordRequestTrans::AccountChangePasswordRequestTrans (
     const ST::string&                               accountName,
     const ST::string&                               password,
-    FNetCliAuthAccountChangePasswordRequestCallback callback,
-    void *                                          param
+    FNetCliAuthAccountChangePasswordRequestCallback callback
 ) : NetAuthTrans(kAccountChangePasswordRequestTrans)
 ,   m_accountName(accountName)
-,   m_callback(callback)
-,   m_param(param)
+,   m_callback(std::move(callback))
 {
     CryptHashPassword(
         m_accountName,
@@ -2677,10 +2608,7 @@ bool AccountChangePasswordRequestTrans::Send () {
 
 //============================================================================
 void AccountChangePasswordRequestTrans::Post () {
-    m_callback(
-        m_result,
-        m_param
-    );
+    m_callback(m_result);
 }
 
 //============================================================================
@@ -2704,12 +2632,10 @@ bool AccountChangePasswordRequestTrans::Recv (
 //============================================================================
 GetPublicAgeListTrans::GetPublicAgeListTrans (
     const ST::string&                   ageName,
-    FNetCliAuthGetPublicAgeListCallback callback,
-    void *                              param
+    FNetCliAuthGetPublicAgeListCallback callback
 ) : NetAuthTrans(kGetPublicAgeListTrans)
 ,   m_ageName(ageName)
-,   m_callback(callback)
-,   m_param(param)
+,   m_callback(std::move(callback))
 {
 }
 
@@ -2735,7 +2661,6 @@ bool GetPublicAgeListTrans::Send () {
 void GetPublicAgeListTrans::Post () {
     m_callback(
         m_result,
-        m_param,
         m_ages
     );
 }
@@ -2766,11 +2691,9 @@ bool GetPublicAgeListTrans::Recv (
 AccountSetRolesRequestTrans::AccountSetRolesRequestTrans (
     const char16_t                              accountName[],
     unsigned                                    accountFlags,
-    FNetCliAuthAccountSetRolesRequestCallback   callback,
-    void *                                      param
+    FNetCliAuthAccountSetRolesRequestCallback   callback
 ) : NetAuthTrans(kAccountSetRolesRequestTrans)
-,   m_callback(callback)
-,   m_param(param)
+,   m_callback(std::move(callback))
 ,   m_accountFlags(accountFlags)
 {
     StrCopy(m_accountName, accountName, std::size(m_accountName));
@@ -2795,10 +2718,7 @@ bool AccountSetRolesRequestTrans::Send () {
 
 //============================================================================
 void AccountSetRolesRequestTrans::Post () {
-    m_callback(
-        m_result,
-        m_param
-    );
+    m_callback(m_result);
 }
 
 //============================================================================
@@ -2823,11 +2743,9 @@ bool AccountSetRolesRequestTrans::Recv (
 AccountSetBillingTypeRequestTrans::AccountSetBillingTypeRequestTrans (
     const char16_t                                  accountName[],
     unsigned                                        billingType,
-    FNetCliAuthAccountSetBillingTypeRequestCallback callback,
-    void *                                          param
+    FNetCliAuthAccountSetBillingTypeRequestCallback callback
 ) : NetAuthTrans(kAccountSetBillingTypeRequestTrans)
-,   m_callback(callback)
-,   m_param(param)
+,   m_callback(std::move(callback))
 ,   m_billingType(billingType)
 {
     StrCopy(m_accountName, accountName, std::size(m_accountName));
@@ -2852,10 +2770,7 @@ bool AccountSetBillingTypeRequestTrans::Send () {
 
 //============================================================================
 void AccountSetBillingTypeRequestTrans::Post () {
-    m_callback(
-        m_result,
-        m_param
-    );
+    m_callback(m_result);
 }
 
 //============================================================================
@@ -2879,11 +2794,9 @@ bool AccountSetBillingTypeRequestTrans::Recv (
 //============================================================================
 AccountActivateRequestTrans::AccountActivateRequestTrans (
     const plUUID&                               activationKey,
-    FNetCliAuthAccountActivateRequestCallback   callback,
-    void *                                      param
+    FNetCliAuthAccountActivateRequestCallback   callback
 ) : NetAuthTrans(kAccountActivateRequestTrans)
-,   m_callback(callback)
-,   m_param(param)
+,   m_callback(std::move(callback))
 {
     m_activationKey = activationKey;
 }
@@ -2906,10 +2819,7 @@ bool AccountActivateRequestTrans::Send () {
 
 //============================================================================
 void AccountActivateRequestTrans::Post () {
-    m_callback(
-        m_result,
-        m_param
-    );
+    m_callback(m_result);
 }
 
 //============================================================================
@@ -3777,11 +3687,9 @@ void NotifyNewBuildTrans::Post () {
 SetPlayerBanStatusRequestTrans::SetPlayerBanStatusRequestTrans (
     unsigned                                        playerId,
     unsigned                                        banned,
-    FNetCliAuthSetPlayerBanStatusRequestCallback    callback,
-    void *                                          param
+    FNetCliAuthSetPlayerBanStatusRequestCallback    callback
 ) : NetAuthTrans(kSetPlayerBanStatusRequestTrans)
-,   m_callback(callback)
-,   m_param(param)
+,   m_callback(std::move(callback))
 ,   m_playerId(playerId)
 ,   m_banned(banned)
 {
@@ -3806,10 +3714,7 @@ bool SetPlayerBanStatusRequestTrans::Send () {
 
 //============================================================================
 void SetPlayerBanStatusRequestTrans::Post () {
-    m_callback(
-        m_result,
-        m_param
-    );
+    m_callback(m_result);
 }
 
 //============================================================================
@@ -3834,11 +3739,9 @@ bool SetPlayerBanStatusRequestTrans::Recv (
 ChangePlayerNameRequestTrans::ChangePlayerNameRequestTrans (
     unsigned                                    playerId,
     const char16_t                              newName[],
-    FNetCliAuthChangePlayerNameRequestCallback  callback,
-    void *                                      param
+    FNetCliAuthChangePlayerNameRequestCallback  callback
 ) : NetAuthTrans(kChangePlayerNameRequestTrans)
-,   m_callback(callback)
-,   m_param(param)
+,   m_callback(std::move(callback))
 ,   m_playerId(playerId)
 {
     StrCopy(m_newName, newName, std::size(m_newName));
@@ -3863,10 +3766,7 @@ bool ChangePlayerNameRequestTrans::Send () {
 
 //============================================================================
 void ChangePlayerNameRequestTrans::Post () {
-    m_callback(
-        m_result,
-        m_param
-    );
+    m_callback(m_result);
 }
 
 //============================================================================
@@ -3893,11 +3793,9 @@ SendFriendInviteTrans::SendFriendInviteTrans (
     const ST::string&                       emailAddr,
     const ST::string&                       toName,
     const plUUID&                           inviteUuid,
-    FNetCliAuthSendFriendInviteCallback     callback,
-    void *                                  param
+    FNetCliAuthSendFriendInviteCallback     callback
 ) : NetAuthTrans(kSendFriendInviteTrans)
-,   m_callback(callback)
-,   m_param(param)
+,   m_callback(std::move(callback))
 ,   m_inviteUuid(inviteUuid)
 ,   m_toName(toName)
 ,   m_emailAddress(emailAddr)
@@ -3927,10 +3825,7 @@ bool SendFriendInviteTrans::Send () {
 
 //============================================================================
 void SendFriendInviteTrans::Post () {
-    m_callback(
-        m_result,
-        m_param
-    );
+    m_callback(m_result);
 }
 
 //============================================================================
@@ -4736,7 +4631,7 @@ void NetCliAuthUnexpectedDisconnect () {
 void NetCliAuthSetConnectCallback (
     FNetCliAuthConnectCallback  callback
 ) {
-    s_connectedCb = callback;
+    s_connectedCb = std::move(callback);
 }
 
 //============================================================================
@@ -4750,12 +4645,10 @@ void NetCliAuthPingRequest (
     unsigned                        pingTimeMs,
     unsigned                        payloadBytes,
     const void *                    payload,
-    FNetCliAuthPingRequestCallback  callback,
-    void *                          param
+    FNetCliAuthPingRequestCallback  callback
 ) {
     PingRequestTrans * trans = new PingRequestTrans(
-        callback,
-        param,
+        std::move(callback),
         pingTimeMs,
         payloadBytes,
         payload
@@ -4766,12 +4659,10 @@ void NetCliAuthPingRequest (
 //============================================================================
 void NetCliAuthAccountExistsRequest (
     const char16_t                              accountName[],
-    FNetCliAuthAccountExistsRequestCallback     callback,
-    void *                                      param
+    FNetCliAuthAccountExistsRequestCallback     callback
 ) {
     AccountExistsRequestTrans * trans = new AccountExistsRequestTrans(
-        callback,
-        param,
+        std::move(callback),
         accountName
     );
     NetTransSend(trans);
@@ -4783,8 +4674,7 @@ void NetCliAuthLoginRequest (
     const ShaDigest *               accountNamePassHash,
     const char16_t                  authToken[],
     const char16_t                  os[],
-    FNetCliAuthLoginRequestCallback callback,
-    void *                          param
+    FNetCliAuthLoginRequestCallback callback
 ) {
     // Cache updated login info if provided.
     if (!accountName.empty())
@@ -4796,7 +4686,7 @@ void NetCliAuthLoginRequest (
     if (os)
         StrCopy(s_os, os, std::size(s_os));
 
-    LoginRequestTrans * trans = new LoginRequestTrans(callback, param);
+    LoginRequestTrans * trans = new LoginRequestTrans(std::move(callback));
     NetTransSend(trans);
 }
 
@@ -4804,14 +4694,12 @@ void NetCliAuthLoginRequest (
 void NetCliAuthAgeRequest (
     const ST::string&                   ageName,
     const plUUID&                       ageInstId,
-    FNetCliAuthAgeRequestCallback       callback,
-    void *                              param
+    FNetCliAuthAgeRequestCallback       callback
 ) {
     AgeRequestTrans * trans = new AgeRequestTrans(
         ageName,
         ageInstId,
-        callback,
-        param
+        std::move(callback)
     );
     NetTransSend(trans);
 }
@@ -4832,16 +4720,14 @@ void NetCliAuthAccountCreateRequest (
     const char16_t                          password[],
     unsigned                                accountFlags,
     unsigned                                billingType,
-    FNetCliAuthAccountCreateRequestCallback callback,
-    void *                                  param
+    FNetCliAuthAccountCreateRequestCallback callback
 ) {
     AccountCreateRequestTrans * trans = new AccountCreateRequestTrans(
         accountName,
         password,
         accountFlags,
         billingType,
-        callback,
-        param
+        std::move(callback)
     );
     NetTransSend(trans);
 }
@@ -4852,16 +4738,14 @@ void NetCliAuthAccountCreateFromKeyRequest (
     const char16_t                                  password[],
     plUUID                                          key,
     unsigned                                        billingType,
-    FNetCliAuthAccountCreateFromKeyRequestCallback  callback,
-    void *                                          param
+    FNetCliAuthAccountCreateFromKeyRequestCallback  callback
 ) {
     AccountCreateFromKeyRequestTrans * trans = new AccountCreateFromKeyRequestTrans(
         accountName,
         password,
         key,
         billingType,
-        callback,
-        param
+        std::move(callback)
     );
     NetTransSend(trans);
 }
@@ -4871,22 +4755,20 @@ void NetCliAuthPlayerCreateRequest (
     const ST::string&                       playerName,
     const ST::string&                       avatarShape,
     const ST::string&                       friendInvite,
-    FNetCliAuthPlayerCreateRequestCallback  callback,
-    void *                                  param
+    FNetCliAuthPlayerCreateRequestCallback  callback
 ) {
     ST::string name = playerName;
     ENetError error = FixupPlayerName(name);
     if (IS_NET_ERROR(error)) {
         NetCliAuthPlayerInfo playerInfo;
-        callback(error, param, playerInfo);
+        callback(error, playerInfo);
     }
     else {
         PlayerCreateRequestTrans * trans = new PlayerCreateRequestTrans(
             name,
             avatarShape,
             friendInvite,
-            callback,
-            param
+            std::move(callback)
         );
         NetTransSend(trans);
     }
@@ -4895,13 +4777,11 @@ void NetCliAuthPlayerCreateRequest (
 //============================================================================
 void NetCliAuthPlayerDeleteRequest (
     unsigned                                playerId,
-    FNetCliAuthPlayerDeleteRequestCallback  callback,
-    void *                                  param
+    FNetCliAuthPlayerDeleteRequestCallback  callback
 ) {
     PlayerDeleteRequestTrans * trans = new PlayerDeleteRequestTrans(
         playerId,
-        callback,
-        param
+        std::move(callback)
     );
     NetTransSend(trans);
 }
@@ -4909,13 +4789,11 @@ void NetCliAuthPlayerDeleteRequest (
 //============================================================================
 void NetCliAuthUpgradeVisitorRequest (
     unsigned                                    playerId,
-    FNetCliAuthUpgradeVisitorRequestCallback    callback,
-    void *                                      param
+    FNetCliAuthUpgradeVisitorRequestCallback    callback
 ) {
     UpgradeVisitorRequestTrans * trans = new UpgradeVisitorRequestTrans(
         playerId,
-        callback,
-        param
+        std::move(callback)
     );
     NetTransSend(trans);
 }
@@ -4940,13 +4818,11 @@ void NetCliAuthSetCCRLevel (
 //============================================================================
 void NetCliAuthSetPlayerRequest (
     unsigned                            playerInt,
-    FNetCliAuthSetPlayerRequestCallback callback,
-    void *                              param
+    FNetCliAuthSetPlayerRequestCallback callback
 ) {
     SetPlayerRequestTrans * trans = new SetPlayerRequestTrans(
         playerInt,
-        callback,
-        param
+        std::move(callback)
     );
     NetTransSend(trans);
 }
@@ -4974,13 +4850,11 @@ void NetCliAuthSetAgePublic (
 //============================================================================
 void NetCliAuthGetPublicAgeList (
     const ST::string&                   ageName,
-    FNetCliAuthGetPublicAgeListCallback callback,
-    void *                              param
+    FNetCliAuthGetPublicAgeListCallback callback
 ) {
     GetPublicAgeListTrans * trans = new GetPublicAgeListTrans(
         ageName,
-        callback,
-        param
+        std::move(callback)
     );
     NetTransSend(trans);
 }
@@ -4989,14 +4863,12 @@ void NetCliAuthGetPublicAgeList (
 void NetCliAuthAccountChangePasswordRequest (
     const ST::string&                               accountName,
     const ST::string&                               password,
-    FNetCliAuthAccountChangePasswordRequestCallback callback,
-    void *                                          param
+    FNetCliAuthAccountChangePasswordRequestCallback callback
 ) {
     AccountChangePasswordRequestTrans * trans = new AccountChangePasswordRequestTrans(
         accountName,
         password,
-        callback,
-        param
+        std::move(callback)
     );
     NetTransSend(trans);
 }
@@ -5005,14 +4877,12 @@ void NetCliAuthAccountChangePasswordRequest (
 void NetCliAuthAccountSetRolesRequest (
     const char16_t                              accountName[],
     unsigned                                    accountFlags,
-    FNetCliAuthAccountSetRolesRequestCallback   callback,
-    void *                                      param
+    FNetCliAuthAccountSetRolesRequestCallback   callback
 ) {
     AccountSetRolesRequestTrans * trans = new AccountSetRolesRequestTrans(
         accountName,
         accountFlags,
-        callback,
-        param
+        std::move(callback)
     );
     NetTransSend(trans);
 }
@@ -5021,14 +4891,12 @@ void NetCliAuthAccountSetRolesRequest (
 void NetCliAuthAccountSetBillingTypeRequest (
     const char16_t                                  accountName[],
     unsigned                                        billingType,
-    FNetCliAuthAccountSetBillingTypeRequestCallback callback,
-    void *                                          param
+    FNetCliAuthAccountSetBillingTypeRequestCallback callback
 ) {
     AccountSetBillingTypeRequestTrans * trans = new AccountSetBillingTypeRequestTrans(
         accountName,
         billingType,
-        callback,
-        param
+        std::move(callback)
     );
     NetTransSend(trans);
 }
@@ -5036,13 +4904,11 @@ void NetCliAuthAccountSetBillingTypeRequest (
 //============================================================================
 void NetCliAuthAccountActivateRequest (
     const plUUID&                               activationKey,
-    FNetCliAuthAccountActivateRequestCallback   callback,
-    void *                                      param
+    FNetCliAuthAccountActivateRequestCallback   callback
 ) {
     AccountActivateRequestTrans * trans = new AccountActivateRequestTrans(
         activationKey,
-        callback,
-        param
+        std::move(callback)
     );
     NetTransSend(trans);
 }
@@ -5314,7 +5180,7 @@ void NetCliAuthVaultInitAge (
 void NetCliAuthSetRecvBufferHandler (
     FNetCliAuthRecvBufferHandler    handler
 ) {
-    s_bufRcvdCb = handler;
+    s_bufRcvdCb = std::move(handler);
 }
 
 //============================================================================
@@ -5400,22 +5266,19 @@ void NetCliAuthLogClientDebuggerConnect () {
 
 //============================================================================
 void NetCliAuthSetNotifyNewBuildHandler (FNotifyNewBuildHandler handler) {
-
-    s_notifyNewBuildHandler = handler;
+    s_notifyNewBuildHandler = std::move(handler);
 }
 
 //============================================================================
 void NetCliAuthSetPlayerBanStatusRequest (
     unsigned                                        playerId,
     unsigned                                        banned,
-    FNetCliAuthSetPlayerBanStatusRequestCallback    callback,
-    void *                                          param
+    FNetCliAuthSetPlayerBanStatusRequestCallback    callback
 ) {
     SetPlayerBanStatusRequestTrans * trans = new SetPlayerBanStatusRequestTrans(
         playerId,
         banned,
-        callback,
-        param
+        std::move(callback)
     );
     NetTransSend(trans);
 }
@@ -5441,14 +5304,12 @@ void NetCliAuthKickPlayer (
 void NetCliAuthChangePlayerNameRequest (
     unsigned                                    playerId,
     const char16_t                              newName[],
-    FNetCliAuthChangePlayerNameRequestCallback  callback,
-    void *                                      param
+    FNetCliAuthChangePlayerNameRequestCallback  callback
 ) {
     ChangePlayerNameRequestTrans * trans = new ChangePlayerNameRequestTrans(
         playerId,
         newName,
-        callback,
-        param
+        std::move(callback)
     );
     NetTransSend(trans);
 }
@@ -5458,15 +5319,13 @@ void NetCliAuthSendFriendInvite (
     const ST::string&                   emailAddress,
     const ST::string&                   toName,
     const plUUID&                       inviteUuid,
-    FNetCliAuthSendFriendInviteCallback callback,
-    void *                              param
+    FNetCliAuthSendFriendInviteCallback callback
 ) {
     SendFriendInviteTrans * trans = new SendFriendInviteTrans(
         emailAddress,
         toName,
         inviteUuid,
-        callback,
-        param
+        std::move(callback)
     );
     NetTransSend(trans);
 }
