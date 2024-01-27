@@ -1336,9 +1336,9 @@ void NetCliFileRegisterBuildIdUpdate (FNetCliFileBuildIdUpdateCallback callback)
 
 //============================================================================
 void NetCliFileManifestRequest (
-    FNetCliFileManifestRequestCallback  callback,
     const char16_t                      group[],
-    unsigned                            buildId /* = 0 */
+    unsigned                            buildId,
+    FNetCliFileManifestRequestCallback  callback
 ) {
     ManifestRequestTrans * trans = new ManifestRequestTrans(
         std::move(callback),
@@ -1352,8 +1352,8 @@ void NetCliFileManifestRequest (
 void NetCliFileDownloadRequest (
     const plFileName &                  filename,
     hsStream *                          writer,
-    FNetCliFileDownloadRequestCallback  callback,
-    unsigned                            buildId /* = 0 */
+    unsigned                            buildId,
+    FNetCliFileDownloadRequestCallback  callback
 ) {
     DownloadRequestTrans * trans = new DownloadRequestTrans(
         std::move(callback),
