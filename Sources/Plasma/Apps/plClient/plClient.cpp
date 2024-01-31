@@ -1535,7 +1535,6 @@ bool plClient::BeginGame()
         // This is needed because there is no auth step in this case
         plNetCommAuthMsg* msg = new plNetCommAuthMsg();
         msg->result = kNetSuccess;
-        msg->param = nullptr;
         msg->Send();
     }
     return true;

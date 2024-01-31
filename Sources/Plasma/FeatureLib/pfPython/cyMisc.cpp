@@ -2177,11 +2177,7 @@ void cyMisc::GetPublicAgeList(const ST::string& ageName, PyObject * cbObject)
 {
     if (cbObject)
         Py_XINCREF(cbObject);
-    NetCommGetPublicAgeList(
-        ageName,
-        cbObject,
-        plNetCommReplyMsg::kParamTypePython
-    );
+    NetCommGetPublicAgeList(ageName);
 }
 
 //////////////////////////////////////////////////////////////////////////////

@@ -82,7 +82,7 @@ static NSOperationQueue* _loginQueue = nil;
 
         if (!NetCliAuthQueryConnected())
             NetCommConnect();
-        NetCommAuthenticate(nullptr);
+        NetCommAuthenticate();
 
         while (!NetCommIsLoginComplete()) {
             if (weakOperation.cancelled) {
