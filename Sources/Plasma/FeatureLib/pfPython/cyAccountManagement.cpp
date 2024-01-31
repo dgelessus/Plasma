@@ -100,17 +100,17 @@ ST::string cyAccountManagement::GetAccountName()
 
 void cyAccountManagement::CreatePlayer(const ST::string& playerName, const ST::string& avatar, const ST::string& invitationCode)
 {
-    NetCommCreatePlayer(playerName, avatar, invitationCode, 0, nullptr);
+    NetCommCreatePlayer(playerName, avatar, invitationCode);
 }
 
 void cyAccountManagement::DeletePlayer(unsigned playerId)
 {
-    NetCommDeletePlayer(playerId, nullptr);
+    NetCommDeletePlayer(playerId);
 }
 
 void cyAccountManagement::SetActivePlayer(unsigned playerId)
 {
-    NetCommSetActivePlayer(playerId, nullptr);
+    NetCommSetActivePlayer(playerId);
 }
 
 bool cyAccountManagement::IsActivePlayerSet()
