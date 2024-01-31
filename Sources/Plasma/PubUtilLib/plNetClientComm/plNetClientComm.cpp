@@ -221,10 +221,8 @@ static void INotifyAuthConnectedCallback () {
 }
 
 //============================================================================
-static void PlayerInitCallback (
-    ENetError   result,
-    void *      param
-) {
+static void PlayerInitCallback(ENetError result)
+{
     if (IS_NET_ERROR(result) && (result != kNetErrVaultNodeNotFound)) {
         s_player = nullptr;
     }
@@ -242,7 +240,6 @@ static void PlayerInitCallback (
 
     plNetCommActivePlayerMsg * msg = new plNetCommActivePlayerMsg;
     msg->result     = result;
-    msg->param      = param;
     msg->Send();
     
     plAccountUpdateMsg * updateMsg = new plAccountUpdateMsg(plAccountUpdateMsg::kActivePlayer);
@@ -253,16 +250,14 @@ static void PlayerInitCallback (
 }
 
 //============================================================================
-static void INetCliAuthSetPlayerRequestCallback (
-    ENetError       result,
-    void *          param
-) {
+static void INetCliAuthSetPlayerRequestCallback(ENetError result)
+{
     if (!s_player) {
-        PlayerInitCallback(result, param);
+        PlayerInitCallback(result);
     }
     else if (IS_NET_ERROR(result) && (result != kNetErrVaultNodeNotFound)) {
         s_player = nullptr;
-        PlayerInitCallback(result, param);
+        PlayerInitCallback(result);
     }
     else {
         s_needAvatarLoad = true;
@@ -270,19 +265,15 @@ static void INetCliAuthSetPlayerRequestCallback (
         VaultDownloadNoCallbacks(
             "SetActivePlayer",
             s_player->playerInt,
-            [param](auto result) {
-                PlayerInitCallback(result, param);
-            },
+            PlayerInitCallback,
             nullptr
         );
     }
 }
 
 //============================================================================
-static void LoginPlayerInitCallback (
-    ENetError                   result,
-    void *                      param
-) {
+static void LoginPlayerInitCallback(ENetError result)
+{
     if (IS_NET_ERROR(result) && (result != kNetErrVaultNodeNotFound))
         s_player = nullptr;
     else
@@ -291,13 +282,11 @@ static void LoginPlayerInitCallback (
     {
         plNetCommAuthMsg * msg  = new plNetCommAuthMsg;
         msg->result             = result;
-        msg->param              = param;
         msg->Send();
     }
     {   
         plNetCommActivePlayerMsg * msg = new plNetCommActivePlayerMsg;
         msg->result     = result;
-        msg->param      = param;
         msg->Send();
     }
     {   
@@ -310,25 +299,20 @@ static void LoginPlayerInitCallback (
 }
 
 //============================================================================
-static void INetCliAuthLoginSetPlayerRequestCallback (
-    ENetError       result,
-    void *          param
-) {
+static void INetCliAuthLoginSetPlayerRequestCallback(ENetError result)
+{
     if (IS_NET_ERROR(result) && (result != kNetErrVaultNodeNotFound)) {
         s_player = nullptr;
         
         plNetCommAuthMsg * msg  = new plNetCommAuthMsg;
         msg->result             = result;
-        msg->param              = param;
         msg->Send();
     }
     else {
         VaultDownloadNoCallbacks(
             "SetActivePlayer",
             s_player->playerInt,
-            [param](auto result) {
-                LoginPlayerInitCallback(result, param);
-            },
+            LoginPlayerInitCallback,
             nullptr
         );
     }
@@ -382,12 +366,7 @@ static void INetCliAuthLoginRequestCallback (
     // If they specified an alternate age, and we found the player, set the active player now
     // so that the link operation will be successful once the client is finished initializing.
     if (!wantsStartUpAge && s_player) {
-        NetCliAuthSetPlayerRequest(
-            s_player->playerInt,
-            [](auto result) {
-                INetCliAuthLoginSetPlayerRequestCallback(result, nullptr);
-            }
-        );
+        NetCliAuthSetPlayerRequest(s_player->playerInt, INetCliAuthLoginSetPlayerRequestCallback);
     }
 }
 
@@ -472,33 +451,25 @@ static void INetCliAuthChangePasswordCallback(ENetError result)
 }
 
 //============================================================================
-static void INetCliAuthGetPublicAgeListCallback (
-    ENetError                   result,
-    void *                      param,
-    std::vector<NetAgeInfo>     ages
-) {
+static void INetCliAuthGetPublicAgeListCallback(ENetError result, std::vector<NetAgeInfo> ages)
+{
     plNetCommPublicAgeListMsg * msg = new plNetCommPublicAgeListMsg;
     msg->result     = result;
-    msg->param      = param;
     msg->ages       = std::move(ages);
     msg->Send();
 }
 
 //============================================================================
-static void INetCliGameJoinAgeRequestCallback (
-    ENetError       result,
-    void *          param
-) {
+static void INetCliGameJoinAgeRequestCallback(ENetError result)
+{
     plNetCommLinkToAgeMsg * msg = new plNetCommLinkToAgeMsg;
     msg->result     = result;
-    msg->param      = param;
     msg->Send();
 }
 
 //============================================================================
 static void INetCliAuthAgeRequestCallback (
     ENetError       result,
-    void *          param,
     unsigned        ageMcpId,
     unsigned        ageVaultId,
     const plUUID&   ageInstId,
@@ -523,16 +494,11 @@ static void INetCliAuthAgeRequestCallback (
             ageMcpId,
             s_account.accountUuid,
             s_player->playerInt,
-            [param](auto result) {
-                INetCliGameJoinAgeRequestCallback(result, param);
-            }
+            INetCliGameJoinAgeRequestCallback
         );
     }
     else {
-        INetCliGameJoinAgeRequestCallback(
-            result,
-            param
-        );
+        INetCliGameJoinAgeRequestCallback(result);
     }
 }
 
@@ -845,9 +811,8 @@ ENetError NetCommGetAuthResult () {
 }
 
 //============================================================================
-void NetCommAuthenticate (
-    void *          param
-) {
+void NetCommAuthenticate()
+{
     s_loginComplete = false;
 
     s_account.accountName = s_iniAccountUsername;
@@ -863,16 +828,13 @@ void NetCommAuthenticate (
 }
 
 //============================================================================
-void NetCommLinkToAge (     // --> plNetCommLinkToAgeMsg
-    const NetCommAge &      age,
-    void *                  param
-) {
+void NetCommLinkToAge(const NetCommAge& age) // --> plNetCommLinkToAgeMsg
+{
     s_age = age;
 
     if (plNetClientApp::GetInstance()->GetFlagsBit(plNetClientApp::kLinkingToOfflineAge)) {
         plNetCommLinkToAgeMsg * msg = new plNetCommLinkToAgeMsg;
         msg->result     = kNetSuccess;
-        msg->param      = nullptr;
         msg->Send();
 
         return;
@@ -881,17 +843,13 @@ void NetCommLinkToAge (     // --> plNetCommLinkToAgeMsg
     NetCliAuthAgeRequest(
         s_age.ageDatasetName,
         s_age.ageInstId,
-        [param](auto result, auto ageMcpId, auto ageVaultId, auto ageInstId, auto gameAddr) {
-            INetCliAuthAgeRequestCallback(result, param, ageMcpId, ageVaultId, ageInstId, gameAddr);
-        }
+        INetCliAuthAgeRequestCallback
     );
 }
 
 //============================================================================
-void NetCommSetActivePlayer (//--> plNetCommActivePlayerMsg
-    unsigned                desiredPlayerInt,
-    void *                  param
-) {
+void NetCommSetActivePlayer(unsigned desiredPlayerInt) // --> plNetCommActivePlayerMsg
+{
     unsigned playerInt = 0;
 
     if (s_player) {
@@ -918,21 +876,14 @@ void NetCommSetActivePlayer (//--> plNetCommActivePlayerMsg
         ASSERT(s_player);
     }
 
-    NetCliAuthSetPlayerRequest(
-        playerInt,
-        [param](auto result) {
-            INetCliAuthSetPlayerRequestCallback(result, param);
-        }
-    );
+    NetCliAuthSetPlayerRequest(playerInt, INetCliAuthSetPlayerRequestCallback);
 }
 
 //============================================================================
 void NetCommCreatePlayer (  // --> plNetCommCreatePlayerMsg
     const ST::string&       playerName,
     const ST::string&       avatarShape,
-    const ST::string&       friendInvite,
-    unsigned                createFlags,
-    void *                  param
+    const ST::string&       friendInvite
 ) {
     NetCliAuthPlayerCreateRequest(
         playerName,
@@ -943,11 +894,8 @@ void NetCommCreatePlayer (  // --> plNetCommCreatePlayerMsg
 }
 
 //============================================================================
-void NetCommDeletePlayer (  // --> plNetCommDeletePlayerMsg
-    unsigned                playerInt,
-    void *                  param
-) {
-    ASSERTMSG(!param, "'param' will not be propagated to your callback function, you may modify the code to support this");
+void NetCommDeletePlayer(unsigned playerInt) // --> plNetCommDeletePlayerMsg
+{
     ASSERT(NetCommGetPlayer()->playerInt != playerInt);
 
     NetCliAuthPlayerDeleteRequest(
@@ -959,16 +907,9 @@ void NetCommDeletePlayer (  // --> plNetCommDeletePlayerMsg
 }
 
 //============================================================================
-void NetCommGetPublicAgeList (//-> plNetCommPublicAgeListMsg
-    const ST::string&               ageName,
-    void *                          param
-) {
-    NetCliAuthGetPublicAgeList(
-        ageName,
-        [param](auto result, auto ages) {
-            INetCliAuthGetPublicAgeListCallback(result, param, std::move(ages));
-        }
-    );
+void NetCommGetPublicAgeList(const ST::string& ageName) // --> plNetCommPublicAgeListMsg
+{
+    NetCliAuthGetPublicAgeList(ageName, INetCliAuthGetPublicAgeListCallback);
 }
 
 //============================================================================
@@ -983,10 +924,8 @@ void NetCommSetAgePublic (  // --> no msg
 }
 
 //============================================================================
-void NetCommUpgradeVisitorToExplorer (
-    unsigned                playerInt,
-    void *                  param
-) {
+void NetCommUpgradeVisitorToExplorer(unsigned playerInt)
+{
     NetCliAuthUpgradeVisitorRequest(
         playerInt,
         [playerInt](auto result) {

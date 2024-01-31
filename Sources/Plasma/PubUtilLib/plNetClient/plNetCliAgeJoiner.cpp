@@ -357,10 +357,7 @@ bool plNCAgeJoiner::MsgReceive (plMessage * msg) {
         if (resMsg->Success())
         {
             nc->ResetServerTimeOffset();
-            NetCommLinkToAge(
-                age,
-                this
-            );
+            NetCommLinkToAge(age);
             nc->DebugMsg("AgeJoiner: Next:kNoOp (age updated)");
         } else
             Complete(false, resMsg->GetError().c_str());

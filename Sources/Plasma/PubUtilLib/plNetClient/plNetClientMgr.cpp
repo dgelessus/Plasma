@@ -928,7 +928,7 @@ bool plNetClientMgr::MsgReceive( plMessage* msg )
         if (ageName.empty())
             ageName = ST_LITERAL("StartUp");
         if (ageName.compare_i("StartUp") == 0)
-            NetCommSetActivePlayer(0, nullptr);
+            NetCommSetActivePlayer(0);
 
         plAgeLinkStruct link;
         link.GetAgeInfo()->SetAgeFilename(NetCommGetStartupAge()->ageDatasetName);

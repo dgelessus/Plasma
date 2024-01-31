@@ -148,40 +148,21 @@ void NetCommActivateMsgDispatchers();
 *
 ***/
 
-void NetCommAuthenticate (  // --> plNetCommAuthMsg
-    void *                  param
-);
-void NetCommLinkToAge (     // --> plNetCommLinkToAgeMsg
-    const NetCommAge &      age,
-    void *                  param
-);
-void NetCommSetActivePlayer (//--> plNetCommActivePlayerMsg
-    unsigned                desiredPlayerInt,
-    void *                  param
-);
+void NetCommAuthenticate(); // --> plNetCommAuthMsg
+void NetCommLinkToAge(const NetCommAge& age); // --> plNetCommLinkToAgeMsg
+void NetCommSetActivePlayer(unsigned desiredPlayerInt); // --> plNetCommActivePlayerMsg
 void NetCommCreatePlayer (  // --> plNetCommCreatePlayerMsg
     const ST::string&       playerName,
     const ST::string&       avatarShape,
-    const ST::string&       friendInvite,
-    unsigned                createFlags,
-    void *                  param
+    const ST::string&       friendInvite
 );
-void NetCommDeletePlayer (  // --> plNetCommDeletePlayerMsg
-    unsigned                playerInt,
-    void *                  param
-);
-void NetCommGetPublicAgeList (//-> plNetCommPublicAgeListMsg
-    const ST::string&               ageName,
-    void *                          param
-);
+void NetCommDeletePlayer(unsigned playerInt); // --> plNetCommDeletePlayerMsg
+void NetCommGetPublicAgeList(const ST::string& ageName); // --> plNetCommPublicAgeListMsg
 void NetCommSetAgePublic (  // --> no msg
     unsigned                ageInfoId,
     bool                    makePublic
 );
-void NetCommUpgradeVisitorToExplorer (
-    unsigned                playerInt,
-    void *                  param
-);
+void NetCommUpgradeVisitorToExplorer(unsigned playerInt);
 void NetCommSetCCRLevel (
     unsigned                ccrLevel
 );

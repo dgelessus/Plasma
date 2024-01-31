@@ -58,7 +58,6 @@ struct NetCliAuthFileInfo;
 class plNetCommReplyMsg : public plMessage {
 public:
     ENetError   result;
-    void *      param;
 
     plNetCommReplyMsg () { SetBCastFlag(kBCastByExactType); }
 

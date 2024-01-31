@@ -452,7 +452,7 @@ static bool AuthenticateNetClientComm(ENetError* result, HWND parentWnd)
         NetCommConnect();
 
     bool cancelled = false;
-    NetCommAuthenticate(nullptr);
+    NetCommAuthenticate();
 
     ::DialogBoxParam(gHInst, MAKEINTRESOURCE( IDD_AUTHENTICATING ), parentWnd, AuthDialogProc, (LPARAM)&cancelled);
 
