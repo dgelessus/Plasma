@@ -221,10 +221,8 @@ static void INotifyAuthConnectedCallback () {
 }
 
 //============================================================================
-static void PlayerInitCallback (
-    ENetError   result,
-    void *      param
-) {
+static void PlayerInitCallback(ENetError result)
+{
     if (IS_NET_ERROR(result) && (result != kNetErrVaultNodeNotFound)) {
         s_player = nullptr;
     }
@@ -255,11 +253,11 @@ static void PlayerInitCallback (
 static void INetCliAuthSetPlayerRequestCallback(ENetError result)
 {
     if (!s_player) {
-        PlayerInitCallback(result, nullptr);
+        PlayerInitCallback(result);
     }
     else if (IS_NET_ERROR(result) && (result != kNetErrVaultNodeNotFound)) {
         s_player = nullptr;
-        PlayerInitCallback(result, nullptr);
+        PlayerInitCallback(result);
     }
     else {
         s_needAvatarLoad = true;
@@ -268,18 +266,14 @@ static void INetCliAuthSetPlayerRequestCallback(ENetError result)
             "SetActivePlayer",
             s_player->playerInt,
             PlayerInitCallback,
-            nullptr,
-            nullptr,
             nullptr
         );
     }
 }
 
 //============================================================================
-static void LoginPlayerInitCallback (
-    ENetError                   result,
-    void *                      param
-) {
+static void LoginPlayerInitCallback(ENetError result)
+{
     if (IS_NET_ERROR(result) && (result != kNetErrVaultNodeNotFound))
         s_player = nullptr;
     else
@@ -319,8 +313,6 @@ static void INetCliAuthLoginSetPlayerRequestCallback(ENetError result)
             "SetActivePlayer",
             s_player->playerInt,
             LoginPlayerInitCallback,
-            nullptr,
-            nullptr,
             nullptr
         );
     }
