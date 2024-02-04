@@ -84,28 +84,6 @@ struct IRelVaultNode {
 };
 
 
-struct VaultCreateNodeTrans {
-    FVaultCreateNodeCallback    callback;
-
-    hsRef<RelVaultNode> createdNode;
-
-    VaultCreateNodeTrans() : callback() {}
-
-    VaultCreateNodeTrans(FVaultCreateNodeCallback _callback) : callback(std::move(_callback)) {}
-
-    void VaultNodeCreated(
-        ENetError           result,
-        unsigned            nodeId
-    );
-    void VaultNodeFetched(
-        ENetError           result,
-        NetVaultNode *      node
-    );
-
-    void Complete (ENetError result);
-};
-
-
 struct VaultDownloadTrans {
     FVaultDownloadCallback      callback;
     FVaultProgressCallback      progressCallback;
@@ -653,52 +631,6 @@ static hsRef<RelVaultNode> GetChildPlayerInfoListNode (
         return nullptr;
 
     return parent->GetChildPlayerInfoListNode(folderType, maxDepth);
-}
-
-
-/*****************************************************************************
-*
-*   VaultCreateNodeTrans
-*
-***/
-
-//============================================================================
-void VaultCreateNodeTrans::VaultNodeCreated (
-    ENetError           result,
-    unsigned            nodeId
-) {
-    if (IS_NET_ERROR(result)) {
-        Complete(result);
-    } else {
-        NetCliAuthVaultNodeFetch(nodeId, [this](auto result, auto node) {
-            VaultNodeFetched(result, node);
-        });
-    }
-}
-
-//============================================================================
-void VaultCreateNodeTrans::VaultNodeFetched (
-    ENetError           result,
-    NetVaultNode *      node
-) {
-    ::VaultNodeFetched(result, node);
-
-    if (IS_NET_SUCCESS(result)) {
-        createdNode = s_nodes.at(node->GetNodeId());
-    } else {
-        createdNode = nullptr;
-    }
-
-    Complete(result);
-}
-
-//============================================================================
-void VaultCreateNodeTrans::Complete (ENetError result) {
-
-    if (callback)
-        callback(result, createdNode);
-
-    delete this;
 }
 
 
@@ -1606,16 +1538,28 @@ void VaultCreateNode (
     hsWeakRef<NetVaultNode>     templateNode,
     FVaultCreateNodeCallback    callback
 ) {
-    VaultCreateNodeTrans* trans = new VaultCreateNodeTrans(std::move(callback));
-
     if (hsRef<RelVaultNode> age = VaultGetAgeNode()) {
         VaultAgeNode access(age);
         templateNode->SetCreateAgeName(access.GetAgeName());
         templateNode->SetCreateAgeUuid(access.GetAgeInstanceGuid());
     }
-    
-    NetCliAuthVaultNodeCreate(templateNode.Get(), [trans](auto result, auto nodeId) {
-        trans->VaultNodeCreated(result, nodeId);
+
+    NetCliAuthVaultNodeCreate(templateNode.Get(), [callback = std::move(callback)](auto result, auto nodeId) mutable {
+        if (IS_NET_ERROR(result)) {
+            if (callback) {
+                callback(result, nullptr);
+            }
+            return;
+        }
+
+        NetCliAuthVaultNodeFetch(nodeId, [callback = std::move(callback)](auto result, auto node) {
+            VaultNodeFetched(result, node);
+
+            hsWeakRef<RelVaultNode> createdNode = IS_NET_SUCCESS(result) ? s_nodes.at(node->GetNodeId()) : nullptr;
+            if (callback) {
+                callback(result, createdNode);
+            }
+        });
     });
 }
 
