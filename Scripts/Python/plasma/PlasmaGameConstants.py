@@ -55,7 +55,6 @@ import enum
 from typing import *
 
 class PtGameJoinError(enum.IntEnum):
-    kGameJoinPending = -1
     kGameJoinSuccess = 0
     kGameJoinErrNotExist = 1
     kGameJoinErrInitFailed = 2
@@ -65,6 +64,7 @@ class PtGameJoinError(enum.IntEnum):
     kGameJoinErrAlreadyJoined = 6
     kGameJoinErrNoInvite = 7
     kNumGameJoinErrors = 8
+    kGameJoinPending = 4294967295
 
 class PtMarkerGameType(enum.IntEnum):
     kMarkerGameQuest = 0
