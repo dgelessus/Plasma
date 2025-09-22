@@ -294,18 +294,16 @@ bool plAgeLoader::ILoadAge(const ST::string& ageName)
         nc->DebugMsg("\tPaging in room {}\n", page->GetName());
     }
 
+    if (nPages == 0) {
+        nc->WarningMsg("Found no pages to load for age {}. You will now link into the empty void and the game may misbehave.", fAgeName);
+    }
+
     pMsg1->Send(clientKey);
 
     // Send the client a message to let go of the extra keys it was holding on to
     plClientMsg *dumpAgeKeys = new plClientMsg( plClientMsg::kReleaseAgeKeys );
     dumpAgeKeys->SetAgeName( fAgeName);
     dumpAgeKeys->Send( clientKey );
-
-    if ( nPages==0 )
-    {
-        // age is done loading because it has no pages?
-        fFlags &= ~kLoadingAge;
-    }
 
     return true;
 }
