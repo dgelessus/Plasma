@@ -139,13 +139,13 @@ class hsExpected
     };
     bool fHasValue;
 
-    inline void IThrowIfNoValue() const
+    inline void IThrowIfNoValue()
     {
         if (!fHasValue)
             throw hsBadExpectedAccess<E>(std::move(fUnexpected));
     }
 
-    inline void IThrowIfValue() const
+    inline void IThrowIfValue()
     {
         if (fHasValue)
             throw hsBadExpectedAccess<T>(std::move(fExpected));
