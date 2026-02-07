@@ -188,7 +188,7 @@ void plAgeLoader::NotifyAgeLoaded( bool loaded )
 // Read in the age desc file and page in/out the rooms belonging to the specified age.
 // Return false on error.
 
-bool plAgeLoader::LoadAge(const ST::string& ageName)
+hsExpected<std::monostate, ST::string> plAgeLoader::LoadAge(const ST::string& ageName)
 {
     plNetClientApp* nc = plNetClientApp::GetInstance();
     ASSERT(!nc->GetFlagsBit(plNetClientApp::kPlayingGame));
@@ -221,15 +221,14 @@ bool plAgeLoader::LoadAge(const ST::string& ageName)
     plSynchEnabler p( false );  // turn off dirty tracking while in this function   
     plAgeDescription ad;
     {
-        std::unique_ptr<hsStream> stream = GetAgeDescFileStream(fAgeName);
-        if (!stream)
-        {
-            nc->ErrorMsg("Failed loading age.  Age desc file {} has nil stream", fAgeName);
+        auto res = GetAgeDescFileStream(fAgeName);
+        if (!res.HasValue()) {
+            nc->ErrorMsg("Failed loading age: {}", res.Error());
             fFlags &= ~kLoadingAge;
-            return false;
+            return hsUnexpected(std::move(res.Error()));
         }
 
-        ad.Read(stream.get());
+        ad.Read(res.Value().get());
         ad.SetAgeName(fAgeName);
     }
     ad.SeekFirstPage();
@@ -296,7 +295,7 @@ bool plAgeLoader::LoadAge(const ST::string& ageName)
     dumpAgeKeys->SetAgeName( fAgeName);
     dumpAgeKeys->Send( clientKey );
 
-    return true;
+    return std::monostate();
 }
 
 //// plUnloadAgeCollector ////////////////////////////////////////////////////
@@ -414,18 +413,16 @@ void plAgeLoader::ExecPendingAgeCsvFiles()
 // return alloced stream or nullptr
 // static
 //
-std::unique_ptr<hsStream> plAgeLoader::GetAgeDescFileStream(const ST::string& ageName)
+hsExpected<std::unique_ptr<hsStream>, ST::string> plAgeLoader::GetAgeDescFileStream(const ST::string& ageName)
 {
     if (ageName.empty())
-        return nullptr;
+        return hsUnexpected(ST_LITERAL("Tried to load age with empty name"));
 
     plFileName ageDescFileName = plFileName::Join("dat", ST::format("{}.age", ageName));
 
     std::unique_ptr<hsStream> stream = plEncryptedStream::OpenEncryptedFile(ageDescFileName);
-    if (!stream)
-    {
-        hsAssert(false, ST::format("Can't find age desc file {}", ageDescFileName).c_str());
-        return nullptr;
+    if (!stream) {
+        return hsUnexpected(ST::format("Can't find age desc file {}", ageDescFileName));
     }
 
     return stream;

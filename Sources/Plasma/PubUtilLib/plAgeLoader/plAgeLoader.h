@@ -45,6 +45,9 @@ You can contact Cyan Worlds, Inc. by email legal@cyan.com
 #include "HeadSpin.h"
 
 #include <memory>
+#include <utility>
+
+#include "hsExpected.h"
 
 #include "pnKeyedObject/hsKeyedObject.h"
 #include "plAgeDescription/plAgeDescription.h"
@@ -97,12 +100,12 @@ public:
 
     static plAgeLoader* GetInstance();
     static void SetInstance(plAgeLoader* inst);
-    static std::unique_ptr<hsStream> GetAgeDescFileStream(const ST::string& ageName);
+    static hsExpected<std::unique_ptr<hsStream>, ST::string> GetAgeDescFileStream(const ST::string& ageName);
 
     void Init();
     void Shutdown();
     bool MsgReceive(plMessage* msg) override;
-    bool LoadAge(const ST::string& ageName);
+    hsExpected<std::monostate, ST::string> LoadAge(const ST::string& ageName);
     bool UnloadAge();
     void UpdateAge(const ST::string& ageName);
     void NotifyAgeLoaded( bool loaded );
